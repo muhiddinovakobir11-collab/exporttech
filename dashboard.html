@@ -485,7 +485,7 @@
                             </div>
                         </div>
                     )}
-
+                    
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                         <div>
                             <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">Mening Mahsulotlarim ({productsList.length})</h1>
@@ -493,6 +493,9 @@
                         </div>
                         <button onClick={() => { setEditIndex(null); setUploadedImg(null); setUploadedCert(null); setCertType(''); setIsModalOpen(true); }} className="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-md active:scale-95">
                             <Icons.Plus /> Yangi qo'shish
+                        </button>
+                    </div>
+                    
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {productsList.map((p, i) => (
                             <div key={i} className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col animate-fade-in">
