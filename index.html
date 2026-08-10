@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExportTech - O'zbekiston hosilini dunyo bozoriga soting</title>
+    <meta name="description" content="ExportTech — O'zbek fermerlari va xorijiy xaridorlarni birlashtiruvchi ishonchli B2B platforma.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              forest: { 50: '#f2fbf5', 100: '#e1f7e9', 200: '#c3ecd3', 300: '#94dbb3', 400: '#5fc28d', 500: '#3ba46f', 600: '#2b8356', 700: '#246946', 800: '#1f5339', 900: '#1a4430', 950: '#0e261b' }
+            },
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            animation: {
+              'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'fade-in': 'fadeIn 0.3s ease-out forwards',
+              'slide-in': 'slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            },
+            keyframes: {
+              fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+              fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+              slideIn: { '0%': { opacity: '0', transform: 'translateY(-20px) scale(0.95)' }, '100%': { opacity: '1', transform: 'translateY(0) scale(1)' } }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: #111827; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(229, 231, 235, 0.5); }
+        .modal-glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    </style>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const Icons = {
+            Menu: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
+            X: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>,
+            Leaf: () => <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-forest-600"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>,
+            Handshake: () => <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-forest-600"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>,
+            FileText: () => <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-forest-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>,
+            ShieldCheck: () => <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-forest-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>,
+            UploadCloud: () => <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>,
+            Contract: () => <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m16 13-3.5 3.5-2-2"/></svg>,
+            Truck: () => <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/><path d="M14 9h4l4 4v5h-3"/><circle cx="19" cy="18" r="2"/><circle cx="9" cy="18" r="2"/></svg>,
+            CreditCard: () => <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>,
+            ArrowRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        };
+
+        const AuthModal = ({ isOpen, onClose, userType }) => {
+            const [mode, setMode] = useState('login');
+            const [kycImage, setKycImage] = useState(null);
+            const [videoStream, setVideoStream] = useState(null);
+            const videoRef = React.useRef(null);
+            const canvasRef = React.useRef(null);
+
+            const stopCamera = () => {
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                    setVideoStream(null);
+                }
+            };
+
+            const handleClose = () => {
+                stopCamera();
+                onClose();
+                setTimeout(() => {
+                    setMode('login');
+                    setKycImage(null);
+                }, 300);
+            };
+
+            const startCamera = async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'environment' }
+                    });
+                    setVideoStream(stream);
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = stream;
+                    }
+                } catch (err) {
+                    console.error("Kamera xatosi:", err);
+                    alert("Kameraga ulanib bo'lmadi yoki ruxsat yo'q. Iltimos, fayl yuklash usulidan foydalaning.");
+                }
+            };
+
+            const takePicture = () => {
+                if (videoRef.current && canvasRef.current) {
+                    const video = videoRef.current;
+                    const canvas = canvasRef.current;
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    const imgDataUrl = canvas.toDataURL('image/jpeg');
+                    setKycImage(imgDataUrl);
+                    stopCamera();
+                }
+            };
+
+            const handleFileUpload = (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    setKycImage(URL.createObjectURL(e.target.files[0]));
+                    stopCamera();
+                }
+            };
+
+            const handleRegisterSubmit = (e) => {
+                e.preventDefault();
+                setMode('kyc');
+                startCamera();
+            };
+
+            if (!isOpen) return null;
+
+            const isFermer = userType === 'fermer';
+            const themeColor = isFermer ? 'forest' : 'blue';
+
+            return (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm animate-fade-in" onClick={handleClose}></div>
+                    <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-white/20 p-8 relative z-10 animate-slide-in max-h-[90vh] overflow-y-auto">
+                        <button onClick={handleClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors z-20">
+                            <Icons.X />
+                        </button>
+                        
+                        <div className="flex items-center gap-2 justify-center mb-6">
+                            <Icons.Leaf />
+                            <span className="font-extrabold text-2xl text-gray-900">ExportTech</span>
+                        </div>
+                        
+                        <div className="flex justify-center mb-6">
+                            <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${isFermer ? 'bg-forest-100 text-forest-700' : 'bg-blue-100 text-blue-700'}`}>
+                                {isFermer ? 'Fermerlar (Sotuvchilar) uchun' : 'Xaridorlar (Eksportyorlar) uchun'}
+                            </span>
+                        </div>
+
+                        {mode === 'login' && (
+                            <div className="animate-fade-in">
+                                <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Tizimga kirish</h2>
+                                <p className="text-center text-gray-500 text-sm mb-8">Ma'lumotlaringizni kiritib kabinetga kiring.</p>
+                                
+                                <form onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const fd = new FormData(e.target);
+                                    const login = fd.get('login');
+                                    const pwd = fd.get('password');
+                                    
+                                    if (login === 'akoshprod' && pwd === '1202aa') {
+                                        localStorage.setItem('userRole', 'admin');
+                                        alert("Xush kelibsiz, Admin!");
+                                        window.location.href = 'dashboard.html';
+                                    } else {
+                                        localStorage.setItem('userRole', isFermer ? 'fermer' : 'xaridor');
+                                        window.location.href = 'dashboard.html';
+                                    }
+                                }}>
+                                    <div className="space-y-5">
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Telefon raqam yoki Login</label>
+                                            <input name="login" type="text" required className={`w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-${themeColor}-600 focus:border-${themeColor}-600 outline-none transition-all text-gray-900 bg-white shadow-sm`} placeholder="Telefon yoki loginni kiriting" defaultValue="akoshprod" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Parol</label>
+                                            <input name="password" type="password" required className={`w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-${themeColor}-600 focus:border-${themeColor}-600 outline-none transition-all text-gray-900 bg-white shadow-sm`} placeholder="••••••••" defaultValue="1202aa" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center mt-4 mb-8">
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input type="checkbox" className={`w-4 h-4 rounded text-${themeColor}-600 focus:ring-${themeColor}-600 border-gray-300`} />
+                                            <span className="text-sm text-gray-600 font-medium">Eslab qolish</span>
+                                        </label>
+                                        <a href="#" className={`text-sm font-semibold text-${themeColor}-600 hover:text-${themeColor}-700 transition-colors`}>Parolni unutdingizmi?</a>
+                                    </div>
+                                    
+                                    <button type="submit" className={`w-full bg-${themeColor}-600 hover:bg-${themeColor}-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-${themeColor}-600/30 hover:shadow-xl active:scale-95 flex items-center justify-center gap-2`}>
+                                        Kabinetga o'tish <Icons.ArrowRight />
+                                    </button>
+                                </form>
+                                <div className="mt-6 text-center text-sm font-medium text-gray-600">
+                                    Hisobingiz yo'qmi? <button onClick={() => setMode('register')} className={`text-${themeColor}-600 font-bold hover:underline ml-1`}>Ro'yxatdan o'tish</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {mode === 'register' && (
+                            <div className="animate-fade-in">
+                                <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Ro'yxatdan o'tish</h2>
+                                <p className="text-center text-gray-500 text-sm mb-8">Yangi hisob yaratish uchun ma'lumotlarni kiriting.</p>
+                                
+                                <form onSubmit={handleRegisterSubmit}>
+                                    <div className="space-y-5">
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Ism Familiya</label>
+                                            <input type="text" required className={`w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-${themeColor}-600 outline-none transition-all text-gray-900 bg-white shadow-sm`} placeholder="Masalan: Alisher Valiyev" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">{isFermer ? "Fermer xo'jaligi nomi" : "Kompaniya (Yuridik shaxs) nomi"}</label>
+                                            <input type="text" required className={`w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-${themeColor}-600 outline-none transition-all text-gray-900 bg-white shadow-sm`} placeholder={isFermer ? "Masalan: Oltin Vodiy MCHJ" : "Masalan: AgroExport LLC"} />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Telefon raqam</label>
+                                            <input type="tel" required className={`w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-${themeColor}-600 outline-none transition-all text-gray-900 bg-white shadow-sm`} placeholder="+998" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Parol o'ylab toping</label>
+                                            <input type="password" required className={`w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-${themeColor}-600 outline-none transition-all text-gray-900 bg-white shadow-sm`} placeholder="Kamida 8 belgi" />
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" className={`w-full bg-${themeColor}-600 hover:bg-${themeColor}-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-${themeColor}-600/30 hover:shadow-xl active:scale-95 flex items-center justify-center gap-2 mt-8`}>
+                                        Keyingi qadam (Identifikatsiya) <Icons.ArrowRight />
+                                    </button>
+                                </form>
+                                <div className="mt-6 text-center text-sm font-medium text-gray-600">
+                                    Hisobingiz bormi? <button onClick={() => setMode('login')} className={`text-${themeColor}-600 font-bold hover:underline ml-1`}>Tizimga kirish</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {mode === 'kyc' && (
+                            <div className="animate-fade-in flex flex-col items-center">
+                                <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Pasport Identifikatsiyasi</h2>
+                                <p className="text-center text-gray-500 text-sm mb-6">Xavfsizlik uchun pasportingizni rasmga oling yoki yuklang.</p>
+                                
+                                <div className="w-full mb-6">
+                                    {kycImage ? (
+                                        <div className={`relative rounded-2xl overflow-hidden border-2 border-${themeColor}-500 shadow-md`}>
+                                            <img src={kycImage} className="w-full h-auto object-cover" alt="Captured Passport" />
+                                            <button onClick={() => { setKycImage(null); startCamera(); }} className="absolute top-2 right-2 bg-white/90 text-gray-800 px-3 py-1.5 rounded-full shadow-sm hover:bg-white text-xs font-bold transition-colors">
+                                                Qayta olish
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="relative rounded-2xl overflow-hidden bg-gray-100 flex items-center justify-center aspect-video border-2 border-dashed border-gray-300">
+                                            <video ref={videoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
+                                            <canvas ref={canvasRef} className="hidden" />
+                                            {!videoStream && (
+                                                <div className="flex flex-col items-center justify-center text-gray-500 p-4 text-center z-10">
+                                                    <Icons.UploadCloud />
+                                                    <p className="mt-2 text-sm font-medium">Kamera ulanmoqda yoki ruxsat etilmagan.</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {!kycImage ? (
+                                    <div className="flex flex-col w-full gap-3">
+                                        <button onClick={takePicture} disabled={!videoStream} className={`w-full font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 ${videoStream ? `bg-${themeColor}-600 hover:bg-${themeColor}-700 text-white` : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>
+                                            Kameradan rasmga olish
+                                        </button>
+                                        <div className="relative flex items-center justify-center w-full">
+                                            <hr className="w-full border-gray-200" />
+                                            <span className="absolute bg-white px-3 text-xs font-semibold text-gray-400">YOKI</span>
+                                        </div>
+                                        <label className={`w-full bg-white border-2 border-gray-200 hover:border-${themeColor}-500 text-gray-700 font-bold py-3.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm text-sm`}>
+                                            Fayl yoki galereyadan yuklash
+                                            <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileUpload} />
+                                        </label>
+                                    </div>
+                                ) : (
+                                    <div className="w-full">
+                                        <button onClick={() => window.location.href = 'dashboard.html'} className={`w-full bg-${themeColor}-600 hover:bg-${themeColor}-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-${themeColor}-600/30 hover:shadow-xl active:scale-95 flex items-center justify-center gap-2`}>
+                                            Ro'yxatdan o'tishni yakunlash <Icons.ArrowRight />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [isScrolled, setIsScrolled] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [isAuthOpen, setIsAuthOpen] = useState(false);
+            const [authType, setAuthType] = useState('fermer');
+
+            useEffect(() => {
+                const handleScroll = () => setIsScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <div className="font-sans min-h-screen flex flex-col">
+                    <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} userType={authType} />
+                    
+                    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass py-3' : 'bg-white/90 backdrop-blur-sm py-5'}`}>
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                            <div className="flex items-center gap-2 cursor-pointer">
+                                <Icons.Leaf />
+                                <span className="font-extrabold text-2xl tracking-tight text-gray-900">ExportTech</span>
+                            </div>
+                            
+                            <nav className="hidden md:flex items-center gap-8">
+                                <a href="#afzalliklar" className="text-sm font-semibold text-gray-600 hover:text-forest-600 transition-colors">Afzalliklar</a>
+                                <a href="#qanday-ishlaydi" className="text-sm font-semibold text-gray-600 hover:text-forest-600 transition-colors">Qanday ishlaydi?</a>
+                                <a href="#boglanish" className="text-sm font-semibold text-gray-600 hover:text-forest-600 transition-colors">Bog'lanish</a>
+                            </nav>
+                            
+                            <div className="hidden md:block">
+                                <button onClick={() => { setAuthType('fermer'); setIsAuthOpen(true); }} className="bg-forest-600 hover:bg-forest-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md shadow-forest-600/20 hover:shadow-lg active:scale-95 text-sm">
+                                    Tizimga kirish
+                                </button>
+                            </div>
+
+                            <button className="md:hidden text-gray-800 p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                                {mobileMenuOpen ? <Icons.X /> : <Icons.Menu />}
+                            </button>
+                        </div>
+                    </header>
+
+                    <main className="flex-grow">
+                        {/* Hero */}
+                        <section className="relative pt-36 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+                            <div className="absolute top-0 right-0 -mr-48 -mt-48 w-[40rem] h-[40rem] rounded-full bg-forest-100/50 blur-3xl opacity-60"></div>
+                            <div className="absolute bottom-0 left-0 -ml-48 -mb-48 w-[40rem] h-[40rem] rounded-full bg-forest-200/40 blur-3xl opacity-60"></div>
+                            
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center text-center animate-fade-in-up">
+                                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6 max-w-5xl">
+                                    O'zbekiston hosilini <span className="text-transparent bg-clip-text bg-gradient-to-r from-forest-600 to-forest-400">vositachilarsiz</span>,<br className="hidden md:block" /> to'g'ridan-to'g'ri dunyo bozoriga soting!
+                                </h1>
+                                
+                                <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl leading-relaxed">
+                                    ExportTech — O'zbek fermerlari va xorijiy xaridorlarni birlashtiruvchi ishonchli B2B platforma. Biz logistika, bojxona hujjatlari va xavfsiz to'lovlarni o'z zimmamizga olamiz.
+                                </p>
+                                
+                                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+                                    <button onClick={() => { setAuthType('fermer'); setIsAuthOpen(true); }} className="w-full sm:w-auto bg-forest-600 hover:bg-forest-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-xl shadow-forest-600/30 hover:shadow-2xl hover:-translate-y-1 active:translate-y-0 active:scale-95 flex items-center justify-center gap-2 group">
+                                        Fermerlar uchun (Sotish) <Icons.ArrowRight />
+                                    </button>
+                                    <button onClick={() => { setAuthType('xaridor'); setIsAuthOpen(true); }} className="w-full sm:w-auto bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-sm hover:shadow hover:-translate-y-1 active:translate-y-0 active:scale-95">
+                                        Xaridorlar uchun
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Problems & Solutions */}
+                        <section id="afzalliklar" className="py-24 bg-white relative">
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div className="bg-white rounded-3xl p-8 shadow-lg shadow-gray-200/50 border border-gray-100 hover:border-forest-200 hover:shadow-xl hover:shadow-forest-100 hover:-translate-y-1 transition-all duration-300 group">
+                                        <div className="w-16 h-16 rounded-2xl bg-forest-50 border border-forest-100 flex items-center justify-center mb-6 group-hover:bg-forest-600 group-hover:text-white transition-colors">
+                                            <div className="group-hover:text-white transition-colors"><Icons.Handshake /></div>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">Vositachilarsiz savdo</h3>
+                                        <p className="text-gray-600 leading-relaxed">0% vositachi. Xaridor bilan to'g'ridan-to'g'ri narx kelishuvi.</p>
+                                    </div>
+                                    <div className="bg-white rounded-3xl p-8 shadow-lg shadow-gray-200/50 border border-gray-100 hover:border-forest-200 hover:shadow-xl hover:shadow-forest-100 hover:-translate-y-1 transition-all duration-300 group mt-0 md:mt-8">
+                                        <div className="w-16 h-16 rounded-2xl bg-forest-50 border border-forest-100 flex items-center justify-center mb-6 group-hover:bg-forest-600 group-hover:text-white transition-colors">
+                                            <div className="group-hover:text-white transition-colors"><Icons.FileText /></div>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">Hujjatlar va Logistika</h3>
+                                        <p className="text-gray-600 leading-relaxed">Bojxona va fitosanitariya hujjatlarida to'liq yuridik ko'mak.</p>
+                                    </div>
+                                    <div className="bg-white rounded-3xl p-8 shadow-lg shadow-gray-200/50 border border-gray-100 hover:border-forest-200 hover:shadow-xl hover:shadow-forest-100 hover:-translate-y-1 transition-all duration-300 group mt-0 md:mt-16">
+                                        <div className="w-16 h-16 rounded-2xl bg-forest-50 border border-forest-100 flex items-center justify-center mb-6 group-hover:bg-forest-600 group-hover:text-white transition-colors">
+                                            <div className="group-hover:text-white transition-colors"><Icons.ShieldCheck /></div>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">Xavfsiz to'lov (Escrow)</h3>
+                                        <p className="text-gray-600 leading-relaxed">To'lovlar platforma hisobida xavfsiz muzlatiladi va yetkazib berilgach to'lanadi.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* How It Works */}
+                        <section id="qanday-ishlaydi" className="py-24 bg-gray-50 border-y border-gray-100">
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                <div className="text-center mb-16">
+                                    <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Qanday ishlaydi?</h2>
+                                </div>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                                    {[
+                                        {title: 'Mahsulotni joylashtirish', icon: <Icons.UploadCloud />},
+                                        {title: 'Xaridor bilan shartnoma tuzish', icon: <Icons.Contract />},
+                                        {title: 'Logistika va eksportni amalga oshirish', icon: <Icons.Truck />},
+                                        {title: 'Kafolatlangan to\'lovni qabul qilish', icon: <Icons.CreditCard />}
+                                    ].map((step, idx) => (
+                                        <div key={idx} className="relative group">
+                                            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-forest-200 transition-all h-full text-center">
+                                                <div className="w-16 h-16 mx-auto rounded-full bg-forest-50 flex items-center justify-center text-forest-600 mb-6 group-hover:scale-110 group-hover:bg-forest-600 group-hover:text-white transition-all shadow-sm">
+                                                    {step.icon}
+                                                </div>
+                                                <div className="text-forest-600 font-bold text-lg mb-2">Qadam 0{idx + 1}</div>
+                                                <h3 className="text-lg font-bold text-gray-900 leading-tight">{step.title}</h3>
+                                            </div>
+                                            {idx < 3 && <div className="hidden lg:block absolute top-16 left-[60%] w-full h-[2px] bg-gradient-to-r from-forest-100 to-transparent -z-10"></div>}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* CTA */}
+                        <section id="boglanish" className="py-24 bg-white relative">
+                            <div className="absolute inset-0 bg-forest-900 overflow-hidden">
+                                <div className="absolute -top-40 -right-40 w-96 h-96 bg-forest-800 rounded-full blur-3xl opacity-70"></div>
+                                <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-forest-700 rounded-full blur-3xl opacity-50"></div>
+                            </div>
+                            
+                            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                                <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+                                    <div className="grid grid-cols-1 md:grid-cols-2">
+                                        <div className="p-10 md:p-14 text-white flex flex-col justify-center">
+                                            <h2 className="text-3xl md:text-4xl font-extrabold mb-6 leading-tight">
+                                                ExportTech tizimining ilk foydalanuvchilaridan biriga aylaning!
+                                            </h2>
+                                            <p className="text-forest-100 text-lg mb-8 opacity-90">
+                                                Hoziroq ma'lumotlaringizni qoldiring va menejerlarimiz siz bilan tez orada bog'lanishadi.
+                                            </p>
+                                        </div>
+                                        
+                                        <div className="bg-white p-10 md:p-14">
+                                            <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); alert("So'rovingiz qabul qilindi!"); }}>
+                                                <div>
+                                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Ismingiz</label>
+                                                    <input type="text" required className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-forest-600 focus:border-forest-600 outline-none transition-all text-gray-900 bg-gray-50 hover:bg-white focus:bg-white shadow-sm" placeholder="Ismingizni kiriting" />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Telefon raqamingiz</label>
+                                                    <input type="tel" required className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-forest-600 focus:border-forest-600 outline-none transition-all text-gray-900 bg-gray-50 hover:bg-white focus:bg-white shadow-sm" placeholder="+998" />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Nima yetishtirasiz?</label>
+                                                    <select required className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-forest-600 focus:border-forest-600 outline-none transition-all text-gray-900 bg-gray-50 hover:bg-white focus:bg-white shadow-sm appearance-none cursor-pointer">
+                                                        <option value="" disabled selected>Tanlang...</option>
+                                                        <option value="meva">Meva va ho'l mevalar</option>
+                                                        <option value="sabzavot">Sabzavotlar</option>
+                                                        <option value="quruq_meva">Quruq mevalar va yong'oqlar</option>
+                                                        <option value="dukkakli">Dukkakli ekinlar</option>
+                                                        <option value="boshqa">Boshqa</option>
+                                                    </select>
+                                                </div>
+                                                <button type="submit" className="w-full bg-forest-600 hover:bg-forest-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl active:scale-95 mt-4">
+                                                    Yuborish
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+
+                    <footer className="bg-gray-900 text-gray-400 py-10 border-t border-gray-800">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="flex items-center gap-2 text-white">
+                                <Icons.Leaf />
+                                <span className="font-bold text-xl tracking-tight">ExportTech</span>
+                            </div>
+                            <p className="text-sm">© 2024 ExportTech. Barcha huquqlar himoyalangan.</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
