@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
@@ -116,14 +116,14 @@
             const userRole = localStorage.getItem('userRole') || 'fermer';
             
             const menuItems = [
-                { id: 'asosiy', icon: '🏠', label: 'Asosiy' },
-                ...(userRole !== 'xaridor' ? [{ id: 'mahsulotlarim', icon: '📦', label: 'Mahsulotlarim' }] : []),
-                ...(userRole !== 'fermer' ? [{ id: 'sotib_olish', icon: '🛒', label: 'Sotib olish' }] : []),
-                ...(userRole !== 'fermer' ? [{ id: 'xaridlarim', icon: '🛍️', label: 'Xaridlarim' }] : []),
-                { id: 'shartnomalar', icon: '📄', label: 'Shartnomalar' },
-                { id: 'logistika', icon: '🚚', label: 'Logistika' },
-                { id: 'tolovlar', icon: '💳', label: 'To\'lovlar' },
-                { id: 'sozlamalar', icon: '⚙️', label: 'Sozlamalar' },
+                { id: 'asosiy', icon: 'рџЏ ', label: 'Asosiy' },
+                ...(userRole !== 'xaridor' ? [{ id: 'mahsulotlarim', icon: 'рџ“¦', label: 'Mahsulotlarim' }] : []),
+                ...(userRole !== 'fermer' ? [{ id: 'sotib_olish', icon: 'рџ›’', label: 'Sotib olish' }] : []),
+                ...(userRole !== 'fermer' ? [{ id: 'xaridlarim', icon: 'рџ›ЌпёЏ', label: 'Xaridlarim' }] : []),
+                { id: 'shartnomalar', icon: 'рџ“„', label: 'Shartnomalar' },
+                { id: 'logistika', icon: 'рџљљ', label: 'Logistika' },
+                { id: 'tolovlar', icon: 'рџ’і', label: 'To\'lovlar' },
+                { id: 'sozlamalar', icon: 'вљ™пёЏ', label: 'Sozlamalar' },
             ];
 
             return (
@@ -133,7 +133,7 @@
                         <div className="h-full flex flex-col">
                             <div className="h-16 flex items-center px-6 border-b border-gray-100 cursor-pointer" onClick={() => window.location.href = 'index.html'}>
                                 <div className="flex items-center gap-2.5 animated-logo-container transition-transform hover:scale-105">
-                                    <span className="text-2xl" style={{ display: 'inline-block', animation: 'spin-slow 10s linear infinite' }}>🌍</span>
+                                    <span className="text-2xl" style={{ display: 'inline-block', animation: 'spin-slow 10s linear infinite' }}>рџЊЌ</span>
                                     <span className="font-black text-2xl tracking-tighter animated-logo-text">ExportTech</span>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@
         /*                                TAB VIEWS                                   */
         /* -------------------------------------------------------------------------- */
 
-        // 1. Asosiy (Dashboard)
+                // 1. Asosiy (Dashboard)
         const AsosiyView = ({ userProfile, setActiveTab, setActiveModal }) => {
             const DashboardCard = ({ title, value, change, isPositive }) => (
                 <div onClick={() => setActiveTab(title.includes('Muzlatilgan') ? 'tolovlar' : title.includes('shartnomalar') ? 'shartnomalar' : 'mahsulotlarim')} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group cursor-pointer relative overflow-hidden">
@@ -203,7 +203,7 @@
                     <p className="text-sm font-bold text-gray-500 mb-2">{title}</p>
                     <div className="flex items-end gap-3 mb-3">
                         <h3 className="text-3xl font-black text-gray-900 group-hover:text-forest-600 transition-colors">{value}</h3>
-                        <div className={lex items-center gap-1 text-sm font-bold \ px-2.5 py-1 rounded-lg mb-1}>
+                        <div className={`flex items-center gap-1 text-sm font-bold ${isPositive ? 'text-forest-600 bg-forest-50' : 'text-red-500 bg-red-50'} px-2.5 py-1 rounded-lg mb-1`}>
                             {isPositive && <Icons.TrendingUp />}{change}
                         </div>
                     </div>
@@ -222,12 +222,12 @@
                         <div className="flex justify-between items-center mb-8">
                             <div>
                                 <h3 className="text-xl font-extrabold text-gray-900">Savdo dinamikasi</h3>
-                                <p className="text-sm font-medium text-gray-500 mt-1">\lik daromad ko'rsatkichi (ming $)</p>
+                                <p className="text-sm font-medium text-gray-500 mt-1">{timeframe}lik daromad ko'rsatkichi (ming $)</p>
                             </div>
                             <div className="flex bg-gray-50 p-1 rounded-xl border border-gray-100 hidden sm:flex">
-                                <button onClick={() => setTimeframe('Hafta')} className={\px-5 py-2 text-xs font-extrabold rounded-lg shadow-sm transition-colors \\}>Hafta</button>
-                                <button onClick={() => setTimeframe('Oy')} className={\px-5 py-2 text-xs font-extrabold rounded-lg shadow-sm transition-colors \\}>Oy</button>
-                                <button onClick={() => setTimeframe('Yil')} className={\px-5 py-2 text-xs font-extrabold rounded-lg shadow-sm transition-colors \\}>Yil</button>
+                                <button onClick={() => setTimeframe('Hafta')} className={`px-5 py-2 text-xs font-extrabold rounded-lg shadow-sm transition-colors ${timeframe === 'Hafta' ? 'bg-white text-gray-900' : 'text-gray-500 hover:text-gray-900'}`}>Hafta</button>
+                                <button onClick={() => setTimeframe('Oy')} className={`px-5 py-2 text-xs font-extrabold rounded-lg shadow-sm transition-colors ${timeframe === 'Oy' ? 'bg-white text-gray-900' : 'text-gray-500 hover:text-gray-900'}`}>Oy</button>
+                                <button onClick={() => setTimeframe('Yil')} className={`px-5 py-2 text-xs font-extrabold rounded-lg shadow-sm transition-colors ${timeframe === 'Yil' ? 'bg-white text-gray-900' : 'text-gray-500 hover:text-gray-900'}`}>Yil</button>
                             </div>
                         </div>
                         <div className="h-64 flex items-end justify-between gap-3 sm:gap-6 mt-8 relative px-2">
@@ -236,13 +236,13 @@
                             </div>
                             {data.map((val, idx) => (
                                 <div key={idx} className="flex flex-col items-center flex-1 h-full justify-end z-10 group cursor-pointer relative pb-6">
-                                    <div className="w-full max-w-[48px] relative rounded-t-xl bg-forest-50 group-hover:bg-forest-100 transition-all duration-300 flex items-end justify-center overflow-visible" style={{ height: \\%\, animationDelay: \\s\ }}>
+                                    <div className="w-full max-w-[48px] relative rounded-t-xl bg-forest-50 group-hover:bg-forest-100 transition-all duration-300 flex items-end justify-center overflow-visible" style={{ height: `${(val/max)*100}%`, animationDelay: `${idx * 0.1}s` }}>
                                         <div className="w-full rounded-t-xl bg-gradient-to-t from-forest-500 to-forest-400 group-hover:from-forest-600 group-hover:to-forest-400 transition-colors shadow-[0_0_15px_rgba(34,197,94,0.2)] group-hover:shadow-[0_0_20px_rgba(34,197,94,0.4)]" style={{ height: '100%', opacity: 0.9 }}></div>
-                                        <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:-translate-y-2 bg-gray-900 text-white text-sm font-extrabold py-1.5 px-3 rounded-xl whitespace-nowrap shadow-xl">\k
+                                        <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:-translate-y-2 bg-gray-900 text-white text-sm font-extrabold py-1.5 px-3 rounded-xl whitespace-nowrap shadow-xl">${val}k
                                             <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-900 rotate-45 rounded-sm"></div>
                                         </div>
                                     </div>
-                                    <span className="text-xs text-gray-500 font-bold absolute bottom-0 left-1/2 -translate-x-1/2">\</span>
+                                    <span className="text-xs text-gray-500 font-bold absolute bottom-0 left-1/2 -translate-x-1/2">{days[idx]}</span>
                                 </div>
                             ))}
                         </div>
@@ -252,13 +252,13 @@
 
             const ContractsTable = () => {
                 const contracts = [
-                    { id: '#10045', buyer: 'Green Foods LLC (BAA)', product: 'Gilos (10 tonna)', amount: ',000', status: 'Kutilmoqda', date: '10 Avgust 2026' },
-                    { id: '#10044', buyer: 'EuroFresh (Germaniya)', product: 'O\'rik quruq (5 tonna)', amount: ',500', status: 'Jo\'natilgan', date: '08 Avgust 2026' },
-                    { id: '#10042', buyer: 'AgroImport (Rossiya)', product: 'Pomidor (20 tonna)', amount: ',000', status: 'Yakunlangan', date: '01 Avgust 2026' },
+                    { id: '#10045', buyer: 'Green Foods LLC (BAA)', product: 'Gilos (10 tonna)', amount: '$25,000', status: 'Kutilmoqda', date: '10 Avgust 2026' },
+                    { id: '#10044', buyer: 'EuroFresh (Germaniya)', product: 'O\'rik quruq (5 tonna)', amount: '$15,500', status: 'Jo\'natilgan', date: '08 Avgust 2026' },
+                    { id: '#10042', buyer: 'AgroImport (Rossiya)', product: 'Pomidor (20 tonna)', amount: '$12,000', status: 'Yakunlangan', date: '01 Avgust 2026' },
                 ];
                 const getBadge = (status) => {
                     const s = { 'Kutilmoqda': 'bg-yellow-100 text-yellow-700', 'Jo\'natilgan': 'bg-blue-100 text-blue-700', 'Yakunlangan': 'bg-green-100 text-green-700' };
-                    return <span className={\px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider \\}>{status}</span>;
+                    return <span className={`px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider ${s[status]}`}>{status}</span>;
                 };
                 return (
                     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all">
@@ -309,7 +309,7 @@
                             <div className="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center shrink-0 shadow-sm"><Icons.CreditCard /></div>
                             <div>
                                 <p className="text-sm font-extrabold text-gray-900">To'lov tasdiqlanmadi</p>
-                                <p className="text-xs text-gray-600 mt-1 font-medium leading-relaxed">AgroImport dan tushgan ,000 ni tasdiqlashingiz kutilmoqda.</p>
+                                <p className="text-xs text-gray-600 mt-1 font-medium leading-relaxed">AgroImport dan tushgan $12,000 ni tasdiqlashingiz kutilmoqda.</p>
                                 <button onClick={(e) => { e.stopPropagation(); setActiveTab('tolovlar'); }} className="text-xs font-bold text-yellow-600 hover:text-yellow-700 mt-2 hover:underline">To'lovlar bo'limiga o'tish</button>
                             </div>
                         </div>
@@ -321,7 +321,7 @@
                 <div className="animate-slide-up pb-12">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                         <div>
-                            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">Xush kelibsiz, {userProfile?.fullName?.split(' ')[1] || 'Foydalanuvchi'}! <span className="inline-block animate-bounce-slow">??</span></h1>
+                            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">Xush kelibsiz, {userProfile?.fullName?.split(' ')[1] || 'Foydalanuvchi'}! <span className="inline-block animate-bounce-slow">👋</span></h1>
                             <p className="text-gray-500 text-sm sm:text-base mt-2 font-medium">ExportTech platformasidagi faoliyatingizning umumiy xulosasi.</p>
                         </div>
                         <button onClick={() => setActiveTab('mahsulotlarim')} className="inline-flex items-center justify-center gap-2 bg-forest-600 hover:bg-forest-700 text-white px-6 py-3.5 rounded-2xl font-bold transition-all shadow-lg shadow-forest-600/30 hover:shadow-xl hover:shadow-forest-600/40 active:scale-95 transform hover:-translate-y-0.5">
@@ -330,7 +330,7 @@
                     </div>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-                        <DashboardCard title="Muzlatilgan balans (Escrow)" value=",500" change="+12.5%" isPositive={true} />
+                        <DashboardCard title="Muzlatilgan balans (Escrow)" value="$40,500" change="+12.5%" isPositive={true} />
                         <DashboardCard title="Faol shartnomalar" value="4" change="+2" isPositive={true} />
                         <DashboardCard title="Profil ko'rishlari" value="128" change="+24%" isPositive={true} />
                         <DashboardCard title="Umumiy eksport" value="75 tonna" change="+15%" isPositive={true} />
@@ -372,35 +372,7 @@
                 </div>
             );
         };
-                                <h3 className="text-lg font-extrabold text-gray-900 mb-5">Tezkor amallar</h3>
-                                <div className="space-y-3">
-                                    <button onClick={() => setActiveTab('mahsulotlarim')} className="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-forest-200 hover:bg-forest-50 transition-all text-left group hover:shadow-sm">
-                                        <div className="w-12 h-12 rounded-xl bg-forest-50 flex items-center justify-center text-forest-600 group-hover:bg-forest-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-md transform group-hover:scale-110"><Icons.Package /></div>
-                                        <div><div className="font-extrabold text-sm text-gray-900 group-hover:text-forest-700 transition-colors">Narxni yangilash</div><div className="text-xs text-gray-500 mt-1 font-medium">Mavjud e'lonlarni tahrirlash</div></div>
-                                    </button>
-                                    <button onClick={() => setActiveTab('logistika')} className="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all text-left group hover:shadow-sm">
-                                        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm group-hover:shadow-md transform group-hover:scale-110"><Icons.Truck /></div>
-                                        <div><div className="font-extrabold text-sm text-gray-900 group-hover:text-blue-700 transition-colors">Logistika chaqirish</div><div className="text-xs text-gray-500 mt-1 font-medium">Yuk uchun transport izlash</div></div>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <AlertsList />
 
-                            <div className="bg-gradient-to-br from-forest-800 to-forest-950 rounded-3xl p-6 relative overflow-hidden shadow-xl shadow-forest-900/20 mt-6 group">
-                                <div className="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
-                                <div className="absolute -left-8 -bottom-8 w-32 h-32 bg-forest-500/20 rounded-full blur-2xl group-hover:bg-forest-400/30 transition-all duration-700"></div>
-                                <h3 className="font-extrabold text-xl mb-2 relative z-10 tracking-tight text-white">Bojxona ko'magi kerakmi?</h3>
-                                <p className="text-forest-100 text-sm mb-6 relative z-10 leading-relaxed font-medium">Ekspertlarimiz bojxona va logistika hujjatlarida sizga yordam berishga tayyor.</p>
-                                <button onClick={() => setActiveModal('consultant')} className="bg-white text-forest-900 text-sm font-extrabold py-3.5 px-4 rounded-xl w-full hover:bg-gray-50 transition-all relative z-10 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2">
-                                    <Icons.MessageCircle /> Konsultant bilan bog'lanish
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
         const initialProducts = [
             { name: 'Eksportbop Gilos (Nav: Bull\'s Eye)', price: '$2,500', qty: '15 tonna', views: 342, cert: 'Fitosanitariya olingan', status: 'Faol e\'lon', color: 'bg-green-100 text-green-700 border-green-200', img: 'https://images.pexels.com/photos/109274/pexels-photo-109274.jpeg?auto=compress&cs=tinysrgb&w=800' },
             { name: 'Saralangan O\'rik (Eksport)', price: '$1,200', qty: '20 tonna', views: 128, cert: 'Tekshiruvda', status: 'Kutilmoqda', color: 'bg-yellow-100 text-yellow-700 border-yellow-200', img: 'https://images.pexels.com/photos/8104445/pexels-photo-8104445.jpeg?auto=compress&cs=tinysrgb&w=800' },
@@ -864,7 +836,7 @@
                                                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${getStatusColor(c.status)}`}>{c.status}</span>
                                             </div>
                                             <h4 className="font-bold text-gray-900 text-lg leading-tight">{c.company}</h4>
-                                            <p className="text-sm text-gray-500 font-medium mt-1">{c.product} <span className="mx-2 text-gray-300">•</span> {c.qty}</p>
+                                            <p className="text-sm text-gray-500 font-medium mt-1">{c.product} <span className="mx-2 text-gray-300">вЂў</span> {c.qty}</p>
                                         </div>
                                     </div>
                                     
@@ -1110,7 +1082,7 @@
                                             <div className="text-blue-500"><Icons.FileText /></div>
                                             <div>
                                                 <p className="text-sm font-bold text-gray-900 group-hover:text-blue-700">{doc.name}</p>
-                                                <p className="text-[10px] text-gray-500">{doc.size} • PDF</p>
+                                                <p className="text-[10px] text-gray-500">{doc.size} вЂў PDF</p>
                                             </div>
                                         </div>
                                         <button className="text-gray-400 hover:text-blue-600"><Icons.Download /></button>
@@ -1307,7 +1279,7 @@
                                         <div>
                                             <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-0.5">Harorat & Namlik</p>
                                             <div className="flex items-center gap-3">
-                                                <p className="font-black text-gray-900 text-lg tabular-nums">+{currentTemp.toFixed(1)}°C</p>
+                                                <p className="font-black text-gray-900 text-lg tabular-nums">+{currentTemp.toFixed(1)}В°C</p>
                                                 <p className="font-bold text-blue-500 text-sm tabular-nums">{currentHumid}%</p>
                                             </div>
                                         </div>
@@ -2032,9 +2004,9 @@
         // 7. Xaridlarim
         const XaridlarimView = () => {
             const purchases = [
-                { id: 'ORD-2023-089', date: '10.08.2026', product: 'Gilos (Eksport bop, 20 tonna)', seller: 'Oltin Vodiy MCHJ', amount: '$24,500', status: 'Yetkazilmoqda', icon: '🍒' },
-                { id: 'ORD-2023-075', date: '05.08.2026', product: 'Anor (Qayta ishlash uchun, 15 tonna)', seller: 'Surxon Agro MCHJ', amount: '$12,000', status: 'Yetkazib berilgan', icon: '🍎' },
-                { id: 'ORD-2023-042', date: '22.07.2026', product: 'Paxta (Xom ashyo, 100 tonna)', seller: 'Buxoro Tex', amount: '$85,000', status: 'To\'lov kutilmoqda', icon: '☁️' }
+                { id: 'ORD-2023-089', date: '10.08.2026', product: 'Gilos (Eksport bop, 20 tonna)', seller: 'Oltin Vodiy MCHJ', amount: '$24,500', status: 'Yetkazilmoqda', icon: 'рџЌ’' },
+                { id: 'ORD-2023-075', date: '05.08.2026', product: 'Anor (Qayta ishlash uchun, 15 tonna)', seller: 'Surxon Agro MCHJ', amount: '$12,000', status: 'Yetkazib berilgan', icon: 'рџЌЋ' },
+                { id: 'ORD-2023-042', date: '22.07.2026', product: 'Paxta (Xom ashyo, 100 tonna)', seller: 'Buxoro Tex', amount: '$85,000', status: 'To\'lov kutilmoqda', icon: 'вЃпёЏ' }
             ];
 
             return (
@@ -2160,7 +2132,7 @@
                 <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
                     <div className="bg-gradient-to-br from-forest-800 to-forest-950 rounded-3xl p-8 max-w-md w-full relative shadow-2xl border border-forest-600">
                         <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-colors"><Icons.X /></button>
-                        <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-3xl mb-6 shadow-inner">⭐</div>
+                        <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-3xl mb-6 shadow-inner">в­ђ</div>
                         <h3 className="text-2xl font-black text-white mb-2">Premium Obuna</h3>
                         <p className="text-forest-100 mb-6 text-sm">Xalqaro bozorga tezroq chiqing. Nol komissiya, VIP logistika va 24/7 bojxona konsaltingi.</p>
                         <ul className="space-y-3 mb-8 text-forest-50 text-sm">
