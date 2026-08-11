@@ -918,7 +918,7 @@
             );
 
             // 1. Auction Modal (OrderModal)
-            const OrderModal = () => {
+            const renderOrderModal = () => {
                 const [step, setStep] = useState('form'); // form | bidding
                 const [bids, setBids] = useState([]);
 
@@ -1018,7 +1018,7 @@
             };
 
             // 2. Smart Docs Modal
-            const SmartDocsModal = () => {
+            const renderSmartDocsModal = () => {
                 if (!docsOpen) return null;
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
@@ -1051,7 +1051,7 @@
             };
 
             // 3. Driver Chat Modal
-            const DriverChatModal = () => {
+            const renderDriverChatModal = () => {
                 if (!chatOpen) return null;
                 return (
                     <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl border-l border-gray-100 z-50 flex flex-col animate-slide-left">
@@ -1091,7 +1091,7 @@
             };
 
             // 4. Cost Estimator Modal
-            const CalculatorModal = () => {
+            const renderCalculatorModal = () => {
                 const [result, setResult] = useState(null);
                 
                 const calculateCost = (e) => {
@@ -1287,10 +1287,10 @@
                         </div>
                     </div>
                     
-                    <OrderModal />
-                    <SmartDocsModal />
-                    <DriverChatModal />
-                    <CalculatorModal />
+                    {renderOrderModal()}
+                    {renderSmartDocsModal()}
+                    {renderDriverChatModal()}
+                    {renderCalculatorModal()}
                 </div>
             );
         };
@@ -2165,6 +2165,7 @@
     </script>
 </body>
 </html>
+
 
 
 
