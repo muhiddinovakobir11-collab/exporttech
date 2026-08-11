@@ -1973,7 +1973,16 @@
                             <button className="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-xl font-bold transition-all shadow-sm text-sm flex items-center gap-2">
                                 <Icons.Filter /> Filtr
                             </button>
-                            <button className="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-xl font-bold transition-all shadow-sm text-sm flex items-center gap-2">
+                            <button onClick={() => {
+                                const csvContent = "data:text/csv;charset=utf-8,Buyurtma,Mahsulot,Sotuvchi,Sana,Summa,Status\n" + purchases.map(e => `${e.id},"${e.product}","${e.seller}",${e.date},"${e.amount}","${e.status}"`).join("\n");
+                                const encodedUri = encodeURI(csvContent);
+                                const link = document.createElement("a");
+                                link.setAttribute("href", encodedUri);
+                                link.setAttribute("download", "xaridlar_tarixi.csv");
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                            }} className="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-xl font-bold transition-all shadow-sm text-sm flex items-center gap-2">
                                 <Icons.Download /> Eksport
                             </button>
                         </div>
@@ -2156,6 +2165,7 @@
     </script>
 </body>
 </html>
+
 
 
 
