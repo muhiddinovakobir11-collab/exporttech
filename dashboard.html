@@ -129,12 +129,12 @@
             return (
                 <>
                     {isSidebarOpen && <div className="fixed inset-0 bg-gray-900/50 z-20 lg:hidden" onClick={() => setSidebarOpen(false)}></div>}
-                    <aside className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-200 z-30 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+                    <aside className={`fixed top-0 left-0 h-screen w-64 bg-slate-900 border-r border-slate-800 z-30 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
                         <div className="h-full flex flex-col">
-                            <div className="h-16 flex items-center px-6 border-b border-gray-100 cursor-pointer" onClick={() => window.location.href = 'index.html'}>
+                            <div className="h-16 flex items-center px-6 border-b border-slate-800 cursor-pointer" onClick={() => window.location.href = 'index.html'}>
                                 <div className="flex items-center gap-2.5 animated-logo-container transition-transform hover:scale-105">
                                     <span className="text-2xl" style={{ display: 'inline-block', animation: 'spin-slow 10s linear infinite' }}>🌍</span>
-                                    <span className="font-black text-2xl tracking-tighter animated-logo-text">ExportTech</span>
+                                    <span className="font-black text-2xl tracking-tighter text-white animated-logo-text">ExportTech</span>
                                 </div>
                             </div>
                             
@@ -143,7 +143,7 @@
                                     <button 
                                         key={item.id} 
                                         onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium group ${activeTab === item.id ? 'active-tab bg-forest-50 text-forest-700 shadow-sm border border-forest-100/50' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium group ${activeTab === item.id ? 'active-tab bg-forest-600 text-white shadow-md border border-forest-500/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
                                         <span className="emoji-icon">{item.icon}</span>
                                         <span className={`font-bold transition-transform group-hover:translate-x-1 ${activeTab === item.id ? 'translate-x-1' : ''}`}>{item.label}</span>
                                     </button>
