@@ -10,7 +10,7 @@
       tailwind.config = {
         theme: {
           extend: {
-            colors: { forest: { 50: '#f2fbf5', 100: '#e1f7e9', 200: '#c3ecd3', 300: '#94dbb3', 400: '#5fc28d', 500: '#3ba46f', 600: '#2b8356', 700: '#246946', 800: '#1f5339', 900: '#1a4430' } },
+            colors: { forest: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' } },
             fontFamily: { sans: ['Inter', 'sans-serif'] },
             animation: { 'fade-in': 'fadeIn 0.3s ease-out forwards', 'slide-up': 'slideUp 0.4s ease-out forwards' },
             keyframes: { 
@@ -2175,7 +2175,12 @@
             );
 
             return (
-                <div className="flex min-h-screen bg-gray-50 relative">
+                <div className="flex min-h-screen bg-slate-50 relative overflow-hidden">
+                    {/* Decorative Background Elements */}
+                    <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-forest-400/10 blur-[100px] pointer-events-none"></div>
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/10 blur-[100px] pointer-events-none"></div>
+                    <div className="absolute top-[40%] right-[10%] w-[30%] h-[30%] rounded-full bg-sky-400/5 blur-[80px] pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAiLz4KPHBhdGggZD0iTTAgMEg0VjRIMEwwIDBaIiBmaWxsPSIjMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDIiLz4KPC9zdmc+')] opacity-50 pointer-events-none"></div>
                     <Sidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} activeTab={activeTab} setActiveTab={setActiveTab} setActiveModal={setActiveModal} />
                     
                     <div className="flex-1 lg:ml-64 flex flex-col min-h-screen overflow-hidden">
