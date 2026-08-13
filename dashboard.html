@@ -198,15 +198,16 @@
         // 1. Asosiy (Dashboard)
         const AsosiyView = ({ userProfile, setActiveTab, setActiveModal }) => {
             const DashboardCard = ({ title, value, change, isPositive }) => (
-                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                    <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
-                    <div className="flex items-end gap-3 mb-2">
-                        <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
-                        <div className={`flex items-center gap-1 text-sm font-semibold ${isPositive ? 'text-forest-600 bg-forest-50' : 'text-red-500 bg-red-50'} px-2 py-0.5 rounded-md mb-1`}>
+                <div className="bg-white/80 backdrop-blur-xl p-6 rounded-2xl border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_-4px_rgba(37,99,235,0.08)] transition-all duration-300 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none -mr-10 -mt-10"></div>
+                    <p className="text-sm font-semibold text-slate-500 mb-1 relative z-10">{title}</p>
+                    <div className="flex items-end gap-3 mb-2 relative z-10">
+                        <h3 className="text-2xl font-black tracking-tight text-slate-800">{value}</h3>
+                        <div className={`flex items-center gap-1 text-xs font-bold ${isPositive ? 'text-emerald-600 bg-emerald-50 border border-emerald-100' : 'text-rose-600 bg-rose-50 border border-rose-100'} px-2 py-1 rounded-md mb-1 shadow-sm`}>
                             {isPositive && <Icons.TrendingUp />}{change}
                         </div>
                     </div>
-                    <p className="text-xs text-gray-400 font-medium">O'tgan oyga nisbatan</p>
+                    <p className="text-xs text-slate-400 font-medium relative z-10">O'tgan oyga nisbatan</p>
                 </div>
             );
 
@@ -215,7 +216,7 @@
                 const max = 120;
                 const days = ['Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan', 'Yak'];
                 return (
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+                    <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] p-6 mb-6">
                         <div className="flex justify-between items-center mb-6">
                             <div>
                                 <h3 className="text-lg font-bold text-gray-900">Savdo dinamikasi</h3>
@@ -252,11 +253,11 @@
                     { id: '#10042', buyer: 'AgroImport (Rossiya)', product: 'Pomidor (20 tonna)', amount: '$12,000', status: 'Yakunlangan', date: '01 Avgust 2026' },
                 ];
                 const getBadge = (status) => {
-                    const s = { 'Kutilmoqda': 'bg-yellow-50 text-yellow-700 border-yellow-200', 'Jo\'natilgan': 'bg-blue-50 text-blue-700 border-blue-200', 'Yakunlangan': 'bg-forest-50 text-forest-700 border-forest-200' };
+                    const s = { 'Kutilmoqda': 'bg-yellow-50 text-yellow-700 border-yellow-200', 'Jo\'natilgan': 'bg-blue-50 text-blue-700 border-blue-200', 'Yakunlangan': 'bg-emerald-50 text-emerald-700 border-emerald-200' };
                     return <span className={`px-2.5 py-1 rounded-md text-xs font-bold border ${s[status]}`}>{status}</span>;
                 };
                 return (
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] overflow-hidden">
                         <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
                             <h3 className="text-lg font-bold text-gray-900">So'nggi shartnomalar</h3>
                             <button onClick={() => setActiveTab('shartnomalar')} className="text-forest-600 text-sm font-bold hover:text-forest-700">Barchasini ko'rish</button>
@@ -314,7 +315,7 @@
                             <ContractsTable />
                         </div>
                         <div className="lg:col-span-1">
-                            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+                            <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] p-6 mb-6">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4">Tezkor amallar</h3>
                                 <div className="space-y-3">
                                     <button onClick={() => setActiveTab('mahsulotlarim')} className="w-full flex items-center gap-4 p-3.5 rounded-xl border border-gray-100 hover:border-forest-200 hover:bg-forest-50 transition-all text-left group">
