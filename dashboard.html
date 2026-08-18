@@ -2460,12 +2460,12 @@ return (
                 const [isOpen, setIsOpen] = useState(false);
                 const [mode, setMode] = useState('gemini');
                 const [messages, setMessages] = useState([
-                    { role: 'ai', text: 'Salom! Men **Gemini Pro** sun\'iy intellektiman 🌟. Erkin muloqot qilishimiz, eksport boyicha savol berishingiz, rasm so\'rashingiz yoki **ovozli xabar** yuborishingiz mumkin!' }
+                    { role: 'ai', text: 'Salom! Men **Gemini Pro** sun\'iy intellektiman 🌟. Men ishlashim uchun pastdagi joyga **Google Gemini API** kalitingizni kiritishingiz kerak. (Agar yo\'q bo\'lsa aistudio.google.com dan bepul oling)' }
                 ]);
                 const [inputValue, setInputValue] = useState('');
                 const [isTyping, setIsTyping] = useState(false);
                 const [isListening, setIsListening] = useState(false);
-                const apiKey = 'SIZNING_API_KALITINGIZ_SHU_YERDA'; // API KALITNI SHU YERGA YOZING
+                const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
                 
                 const messagesEndRef = useRef(null);
 
@@ -2589,7 +2589,7 @@ return (
                         return;
                     }
 
-                    if (apiKey) {
+                    if (apiKey && apiKey !== 'SIZNING_API_KALITINGIZ_SHU_YERDA') {
                         try {
                             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                                 method: 'POST',
