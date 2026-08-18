@@ -1063,6 +1063,11 @@
                         zoom: 5,
                         type: 'yandex#hybrid', // Satellite + Roads
                         controls: ['zoomControl', 'typeSelector', 'fullscreenControl']
+                    }, {
+                        // Prevent zooming out too far to avoid infinite repeating tiles
+                        minZoom: 3,
+                        // Restrict map bounds to avoid gray empty areas at poles
+                        restrictMapArea: [[-85, -179.9], [85, 179.9]]
                     });
                     
                     // Enable 3D tilt behavior if available in current view
