@@ -74,6 +74,17 @@
             -webkit-text-fill-color: transparent;
             animation: text-glow-pulse 3s ease-in-out infinite;
         }
+    
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .translate-z-12 { transform: translateZ(128px); }
+        .-translate-z-12 { transform: translateZ(-128px); }
+        .rotate-y-180 { transform: rotateY(180deg) translateZ(128px); }
+        .rotate-y-90 { transform: rotateY(90deg) translateZ(128px); }
+        .-rotate-y-90 { transform: rotateY(-90deg) translateZ(128px); }
+        .rotate-x-90 { transform: rotateX(90deg) translateZ(128px); }
+        .-rotate-x-90 { transform: rotateX(-90deg) translateZ(128px); }
+        .pause { animation-play-state: paused; }
     </style>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
@@ -451,6 +462,7 @@
             
             const [productsList, setProductsList] = useState(initialProducts);
             const [isModalOpen, setIsModalOpen] = useState(false);
+            const [activeBadge, setActiveBadge] = useState(null);
             const [editIndex, setEditIndex] = useState(null);
             const [uploadedImg, setUploadedImg] = useState(null);
             const [uploadedCert, setUploadedCert] = useState(null);
@@ -611,9 +623,9 @@
                                             <span className="font-extrabold text-gray-900">{p.qty}</span>
                                         </div>
                                         <div className="flex flex-wrap gap-2 pt-1 pb-1">
-                                            <span className="bg-emerald-100 text-emerald-700 text-[10px] font-extrabold px-2 py-1 rounded-md border border-emerald-200">HALAL 🛡️</span>
-                                            <span className="bg-blue-100 text-blue-700 text-[10px] font-extrabold px-2 py-1 rounded-md border border-blue-200">GlobalGAP 🌍</span>
-                                            <span className="bg-orange-100 text-orange-700 text-[10px] font-extrabold px-2 py-1 rounded-md border border-orange-200 cursor-pointer">3D Ko'rish 🎬</span>
+                                            <span onClick={() => setActiveBadge({type: 'cert', name: 'HALAL Sertifikati', img: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=400'})} className="bg-emerald-100 text-emerald-700 text-[10px] font-extrabold px-2 py-1 rounded-md border border-emerald-200 cursor-pointer hover:bg-emerald-200 transition-colors shadow-sm active:scale-95 flex items-center gap-1">HALAL 🛡️</span>
+                                            <span onClick={() => setActiveBadge({type: 'cert', name: 'GlobalGAP Sertifikati', img: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&q=80&w=400'})} className="bg-blue-100 text-blue-700 text-[10px] font-extrabold px-2 py-1 rounded-md border border-blue-200 cursor-pointer hover:bg-blue-200 transition-colors shadow-sm active:scale-95 flex items-center gap-1">GlobalGAP 🌍</span>
+                                            <span onClick={() => setActiveBadge({type: '3d', name: p.name})} className="bg-orange-100 text-orange-700 text-[10px] font-extrabold px-2 py-1 rounded-md border border-orange-200 cursor-pointer hover:bg-orange-200 transition-colors shadow-sm active:scale-95 flex items-center gap-1">3D Ko'rish 🎬</span>
                                         </div>
                                         <div className="flex justify-between items-center bg-forest-50 p-2 rounded-lg border border-forest-100 mb-2">
                                             <span className="text-[11px] font-bold text-forest-700">Tavsiya narx:</span>
