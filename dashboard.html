@@ -2506,9 +2506,7 @@ return (
                         }
                         
                         // Wait a tiny bit to ensure audio engine is ready after recognition
-                        setTimeout(() => {
-                            window.speechSynthesis.speak(utterance);
-                        }, 300);
+                        window.speechSynthesis.cancel(); window.speechSynthesis.speak(utterance);
                         
                     } catch (e) {
                         console.error('Speech error:', e);
