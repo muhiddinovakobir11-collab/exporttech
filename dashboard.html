@@ -996,6 +996,8 @@
             const mapRef = useRef(null);
             const [showOrderModal, setShowOrderModal] = useState(false);
             const [activeShipmentId, setActiveShipmentId] = useState('TRK-9823');
+            const [is3D, setIs3D] = useState(false);
+            const globeEl = useRef(null);
             const [calcOpen, setCalcOpen] = useState(false);
             const [consOpen, setConsOpen] = useState(false);
             const [docsOpen, setDocsOpen] = useState(false);
@@ -1467,7 +1469,58 @@ return (
                         <div className="lg:col-span-2 space-y-6">
                             {/* Interactive Map Area */}
                             <div className="bg-slate-900 rounded-3xl h-[400px] sm:h-[450px] border-4 border-slate-800 relative overflow-hidden shadow-2xl mb-6">
-                                <div ref={mapRef} className="absolute inset-0 w-full h-full"></div>
+                                                    {is3D ? (
+                        <div id="globeViz" className="absolute inset-0 w-full h-full bg-slate-900 overflow-hidden cursor-move" ref={(el) => {
+                            if(el && !globeEl.current && window.Globe) {
+                                globeEl.current = Globe()(el)
+                                    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+                                    .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+                                    .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+                                    .arcsData([{
+                                        startLat: activeShipment.startCoord[0],
+                                        startLng: activeShipment.startCoord[1],
+                                        endLat: activeShipment.endCoord[0],
+                                        endLng: activeShipment.endCoord[1],
+                                        color: ['#00ff00', '#ff0000']
+                                    }])
+                                    .arcColor('color')
+                                    .arcDashLength(0.4)
+                                    .arcDashGap(0.2)
+                                    .arcDashAnimateTime(1500)
+                                    .labelsData([
+                                        { lat: activeShipment.startCoord[0], lng: activeShipment.startCoord[1], text: activeShipment.start, color: 'white' },
+                                        { lat: activeShipment.endCoord[0], lng: activeShipment.endCoord[1], text: activeShipment.end, color: 'white' },
+                                        { lat: activeShipment.currentCoord[0], lng: activeShipment.currentCoord[1], text: 'Yuk mashinasi', color: 'yellow' }
+                                    ])
+                                    .labelLat(d => d.lat)
+                                    .labelLng(d => d.lng)
+                                    .labelText(d => d.text)
+                                    .labelSize(1.5)
+                                    .labelDotRadius(0.5)
+                                    .labelColor(d => d.color)
+                                    .labelResolution(2);
+                                
+                                globeEl.current.controls().autoRotate = true;
+                                globeEl.current.controls().autoRotateSpeed = 1;
+                                globeEl.current.pointOfView({ lat: activeShipment.currentCoord[0], lng: activeShipment.currentCoord[1], altitude: 1.5 }, 2000);
+                            } else if (globeEl.current) {
+                                globeEl.current.arcsData([{
+                                    startLat: activeShipment.startCoord[0],
+                                    startLng: activeShipment.startCoord[1],
+                                    endLat: activeShipment.endCoord[0],
+                                    endLng: activeShipment.endCoord[1],
+                                    color: ['#00ff00', '#ff0000']
+                                }]).labelsData([
+                                    { lat: activeShipment.startCoord[0], lng: activeShipment.startCoord[1], text: activeShipment.start, color: 'white' },
+                                    { lat: activeShipment.endCoord[0], lng: activeShipment.endCoord[1], text: activeShipment.end, color: 'white' },
+                                    { lat: activeShipment.currentCoord[0], lng: activeShipment.currentCoord[1], text: 'Yuk mashinasi', color: 'yellow' }
+                                ]);
+                                globeEl.current.pointOfView({ lat: activeShipment.currentCoord[0], lng: activeShipment.currentCoord[1], altitude: 1.5 }, 1000);
+                            }
+                        }}></div>
+                    ) : (
+                        <div ref={mapRef} className="absolute inset-0 w-full h-full"></div>
+                    )}
                             </div>
 
                             {/* Driver Info & IoT Stats */}
