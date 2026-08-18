@@ -2436,7 +2436,7 @@ return (
                                                         {msg.role === 'user' ? 'Siz' : 'AI'}
                                                     </div>
                                                     <div className={"p-3.5 rounded-2xl shadow-sm max-w-[85%] text-sm " + (msg.role === 'user' ? 'bg-forest-600 text-white rounded-tr-none' : 'bg-white border border-purple-100/50 rounded-tl-none text-gray-800')}>
-                                                        <div className="whitespace-pre-wrap leading-relaxed" dangerouslySetInnerHTML={{ __html: msg.text.replace(/**(.*?)**/g, '<strong>$1</strong>') }} />
+                                                        <div className="whitespace-pre-wrap leading-relaxed" dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                                                     </div>
                                                 </div>
                                             ))}
@@ -2481,8 +2481,170 @@ return (
             };
 
             // Global modal states handled in App
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('asosiy');
             const [activeModal, setActiveModal] = useState(null);
-const root = ReactDOM.createRoot(document.getElementById('root'));
+            const [isLoggedIn, setIsLoggedIn] = useState(true);
+            const [userProfile, setUserProfile] = useState({
+                fullName: 'Muhiddinov Akobir',
+                phone: '+998 93 688 48 49',
+                company: 'Oltin Vodiy MCHJ',
+                avatar: null
+            });
+            const CurrentView = Views[activeTab];
+
+
+            if (!isLoggedIn) {
+                return (
+                    <div className="min-h-screen bg-[#f4fbfa] flex items-center justify-center p-4 relative overflow-hidden">
+                        {/* Decorative Ecological Background Elements */}
+                        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-400/10 blur-[120px] pointer-events-none"></div>
+                        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-teal-400/10 blur-[120px] pointer-events-none"></div>
+                        
+                        <div className="bg-white rounded-[24px] shadow-2xl max-w-[400px] w-full p-8 relative z-10 animate-scale-in border border-gray-100">
+                            <div className="flex justify-center mb-6">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-10 h-10 bg-forest-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-forest-600/30">
+                                        <Icons.Globe />
+                                    </div>
+                                    <span className="text-xl font-black text-gray-900 tracking-tight">Export<span className="text-forest-600">Tech</span></span>
+                                </div>
+                            </div>
+                            
+                            <h2 className="text-center text-2xl font-black text-gray-900 mb-2">Tizimga kirish</h2>
+                            <p className="text-center text-gray-500 text-sm mb-8">Davom etish uchun hisobingizga kiring</p>
+                            
+                            <div className="space-y-3 mb-6">
+                                <button onClick={() => setIsLoggedIn(true)} className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 text-gray-700 font-bold py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                                    Google orqali kirish
+                                </button>
+                                <button onClick={() => setIsLoggedIn(true)} className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 text-gray-700 font-bold py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                                    Facebook orqali kirish
+                                </button>
+                            </div>
+                            
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Yoki</span>
+                                <div className="h-px bg-gray-200 flex-1"></div>
+                            </div>
+                            
+                                                        <form onSubmit={(e) => { 
+                                e.preventDefault(); 
+                                const login = e.target.elements.login.value;
+                                const password = e.target.elements.password.value;
+                                
+                                if (login === 'akoshprod' && password === '1202aaaa') {
+                                    setIsLoggedIn(true);
+                                } else if (password === login) {
+                                    // Boshqalar uchun: parol login bilan bir xil bo'lsa kiradi (telefon yoki gmail)
+                                    setIsLoggedIn(true);
+                                } else {
+                                    alert("Noto'g'ri login yoki parol kiritdingiz!");
+                                }
+                            }} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Login (Email yoki Telefon)</label>
+                                    <input required name="login" type="text" placeholder="akoshprod / +998..." className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent transition-all" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Parol</label>
+                                    <input required name="password" type="password" placeholder="••••••••" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent transition-all" />
+                                </div>
+                                <button type="submit" className="w-full bg-forest-600 text-white font-bold py-3 rounded-xl hover:bg-forest-700 transition-colors shadow-md mt-2">Davom etish</button>
+                            </form>
+                            
+                            <p className="text-center text-xs text-gray-400 mt-6">
+                                Davom etish orqali siz bizning <a href="#" className="text-forest-600 hover:underline">Foydalanish shartlariga</a> rozi bo'lasiz.
+                            </p>
+                        </div>
+                    </div>
+                );
+            }
+
+            // Modal definitions
+            const CheckSVG = () => <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>;
+            const MessageSVG = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>;
+
+            const PremiumModal = () => activeModal === 'premium' && (
+                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-gradient-to-br from-forest-800 to-forest-950 rounded-3xl p-8 max-w-md w-full relative shadow-2xl border border-forest-600">
+                        <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-colors"><Icons.X size={24} /></button>
+                        <div className="w-16 h-16 bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mb-6 shadow-inner border border-yellow-400/30"><Icons.Star size={32} className="text-yellow-400 fill-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]" /></div>
+                        <h3 className="text-2xl font-black text-white mb-2">Premium Obuna</h3>
+                        <p className="text-forest-100 mb-6 text-sm">Xalqaro bozorga tezroq chiqing. Nol komissiya, VIP logistika va 24/7 bojxona konsaltingi.</p>
+                        <ul className="space-y-3 mb-8 text-forest-50 text-sm">
+                            <li className="flex items-center gap-2"><div className="w-5 h-5 rounded-full bg-forest-500 flex items-center justify-center"><CheckSVG /></div> Cheksiz e'lonlar</li>
+                            <li className="flex items-center gap-2"><div className="w-5 h-5 rounded-full bg-forest-500 flex items-center justify-center"><CheckSVG /></div> Escrow xizmati 0%</li>
+                        </ul>
+                        <button onClick={() => { alert('Premium aktivlashtirildi!'); setActiveModal(null); }} className="w-full bg-white text-forest-900 hover:bg-forest-50 font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95">Obuna bo'lish ($99/oy)</button>
+                    </div>
+                </div>
+            );
+
+            const ConsultantModal = () => activeModal === 'consultant' && (
+                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative shadow-2xl">
+                        <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
+                        <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-6 mx-auto"><MessageSVG /></div>
+                        <h3 className="text-xl font-extrabold text-gray-900 text-center mb-2">Bojxona Eksperti</h3>
+                        <p className="text-gray-500 text-center text-sm mb-6 font-medium">Mutaxassislarimiz hujjatlarni rasmiylashtirishda yordam berishga tayyor.</p>
+                        <div className="flex gap-4">
+                            <button onClick={() => { alert('Qo\'ng\'iroq qilinmoqda: +99871 200 00 00'); setActiveModal(null); }} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3 rounded-xl transition-all">Qo'ng'iroq</button>
+                            <button onClick={() => { alert('Chat ochilmoqda...'); setActiveModal(null); }} className="flex-1 bg-forest-600 hover:bg-forest-700 text-white font-bold py-3 rounded-xl transition-all">Jonli Chat</button>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const NotificationsModal = () => activeModal === 'notifications' && (
+                <div className="fixed inset-0 bg-transparent z-[100] flex justify-end items-start p-4 pt-20" onClick={() => setActiveModal(null)}>
+                    <div className="bg-white rounded-2xl w-80 shadow-2xl border border-gray-100 animate-slide-up" onClick={e => e.stopPropagation()}>
+                        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="font-bold text-gray-900">Bildirishnomalar</h3>
+                            <button onClick={() => setActiveModal(null)} className="text-gray-400 hover:text-gray-600"><Icons.X size={16} /></button>
+                        </div>
+                        <div className="p-2">
+                            <div className="p-3 hover:bg-gray-50 rounded-xl cursor-pointer">
+                                <p className="text-sm font-bold text-gray-900">Yangi xaridor</p>
+                                <p className="text-xs text-gray-500 mt-1 font-medium">Green Foods LLC sizning "Gilos" e'loningizga qiziqish bildirdi.</p>
+                            </div>
+                            <div className="p-3 hover:bg-gray-50 rounded-xl cursor-pointer mt-1">
+                                <p className="text-sm font-bold text-gray-900">To'lov qabul qilindi</p>
+                                <p className="text-xs text-gray-500 mt-1 font-medium">$15,500 Escrow hisobingizga tushdi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="flex min-h-screen bg-[#f4fbfa] relative overflow-hidden">
+                    {/* Decorative Ecological Background Elements */}
+                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-400/10 blur-[120px] pointer-events-none"></div>
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-teal-400/10 blur-[120px] pointer-events-none"></div>
+                    <div className="absolute top-[30%] right-[20%] w-[40%] h-[40%] rounded-full bg-lime-400/5 blur-[100px] pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAiLz4KPHBhdGggZD0iTTAgMEg0VjRIMEwwIDBaIiBmaWxsPSIjMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDIiLz4KPC9zdmc+')] opacity-[0.03] pointer-events-none"></div>
+                    <Sidebar isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} activeTab={activeTab} setActiveTab={setActiveTab} setActiveModal={setActiveModal} />
+                    
+                    <div className="flex-1 lg:ml-64 flex flex-col min-h-screen overflow-hidden">
+                        <Topbar setSidebarOpen={setSidebarOpen} userProfile={userProfile} setActiveModal={setActiveModal} />
+                        
+                        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto relative z-0">
+                            <CurrentView userProfile={userProfile} setUserProfile={setUserProfile} setActiveTab={setActiveTab} setActiveModal={setActiveModal} setIsLoggedIn={setIsLoggedIn} />
+                        </main>
+                    </div>
+                    
+                    <PremiumModal />
+                    <ConsultantModal />
+                    <NotificationsModal />
+                    <GlobalChatWidget />
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
 </body>
