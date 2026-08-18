@@ -962,6 +962,7 @@
             const [showOrderModal, setShowOrderModal] = useState(false);
             const [activeShipmentId, setActiveShipmentId] = useState('TRK-9823');
             const [calcOpen, setCalcOpen] = useState(false);
+            const [consOpen, setConsOpen] = useState(false);
             const [docsOpen, setDocsOpen] = useState(false);
             const [chatOpen, setChatOpen] = useState(false);
             const [chatMessages, setChatMessages] = useState([
@@ -1210,6 +1211,61 @@
                 );
             };
 
+            
+            // 5. Consolidation Modal
+            const renderConsolidationModal = () => {
+                if (!consOpen) return null;
+                return (
+                    <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in" onClick={() => setConsOpen(false)}>
+                        <div className="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full relative animate-slide-up shadow-2xl border border-gray-100" onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setConsOpen(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                                    <Icons.Package size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-black text-gray-900">Yuklarni Birlashtirish (Сборный) 📦</h3>
+                                    <p className="text-gray-500 text-sm">Bir yo'nalishdagi sheriklarni topib pulingizni tejang</p>
+                                </div>
+                            </div>
+                            
+                            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6">
+                                <p className="text-blue-800 text-sm font-medium flex gap-2">
+                                    <Icons.TrendingUp size={18} className="shrink-0" /> Siz kabi 10 tonnadan kam yuk jo'natuvchilar bilan 1 ta furani to'ldirib, logistika xarajatini 40% gacha tejashingiz mumkin.
+                                </p>
+                            </div>
+                            
+                            <h4 className="font-bold text-gray-900 mb-4">Aktiv sheriklar (Kutilmoqda)</h4>
+                            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                                {[
+                                    { route: 'Toshkent ➔ Moskva', comp: 'Agro Export MCHJ', space: '8 tonna joy bor', date: 'Ertaga, 14:00', match: '95%' },
+                                    { route: 'Farg\'ona ➔ Dubay (Havo)', comp: 'Valley Fruits', space: '2.5 tonna joy bor', date: '15 Avgust', match: '80%' },
+                                    { route: 'Samarqand ➔ Olmaota', comp: 'Sam Silk Road', space: '12 tonna joy bor', date: 'Indinga, 09:00', match: '65%' }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-orange-200 hover:bg-orange-50/30 transition-colors group">
+                                        <div className="mb-3 sm:mb-0">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className="font-bold text-gray-900">{item.route}</span>
+                                                <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{item.match} Moslik</span>
+                                            </div>
+                                            <p className="text-sm text-gray-500 mb-1">{item.comp}</p>
+                                            <div className="flex items-center gap-3 text-xs font-medium text-gray-400">
+                                                <span className="flex items-center gap-1"><Icons.Package size={12}/> {item.space}</span>
+                                                <span className="flex items-center gap-1"><Icons.MapPin size={12}/> {item.date}</span>
+                                            </div>
+                                        </div>
+                                        <button className="bg-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors" onClick={() => {alert('Talabnoma yuborildi! Logistika menejeri siz bilan bog\'lanadi.'); setConsOpen(false);}}>Qo'shilish</button>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            <button className="w-full mt-6 bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-gray-800 transition-colors shadow-md">O'zim e'lon berish</button>
+                        </div>
+                    </div>
+                );
+            };
+
+
             // 4. Cost Estimator Modal
             const renderCalculatorModal = () => {
                 const [result, setResult] = useState(null);
@@ -1298,7 +1354,7 @@ return (
                             <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
                             <h3 className="font-bold text-lg mb-2">Yuklarni Birlashtirish (Сборный) 📦</h3>
                             <p className="text-orange-100 text-sm mb-4">Kichik yuklarni bir furaga jamlab pulingizni tejang.</p>
-                            <button className="bg-white text-orange-600 text-sm font-bold px-4 py-2 rounded-xl hover:bg-orange-50 transition-colors shadow-sm cursor-pointer">Sherik qidirish</button>
+                            <button onClick={() => setConsOpen(true)} className="bg-white text-orange-600 text-sm font-bold px-4 py-2 rounded-xl hover:bg-orange-50 transition-colors shadow-sm cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-md">Sherik qidirish</button>
                         </div>
                     </div>
                     
@@ -1426,6 +1482,7 @@ return (
                     {renderSmartDocsModal()}
                     {renderDriverChatModal()}
                     {renderCalculatorModal()}
+                    {renderConsolidationModal()}
                 </div>
             );
         };
