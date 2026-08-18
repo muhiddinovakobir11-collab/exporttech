@@ -2590,7 +2590,7 @@ return (
                         return;
                     }
 
-                    if (apiKey && apiKey !== 'SIZNING_API_KALITINGIZ_SHU_YERDA') {
+                    if (apiKey) {
                         try {
                             const systemInstruction = isVoice ? "Siz ExportTech platformasining AI yordamchisisiz. Foydalanuvchi OVOZ orqali gapiryapti. Iltimos, javobni QISQA, SODDA va silliq og'zaki dilda bering. Markdown, yulduzchalar (*), va murakkab belgilardan umuman foydalanmang!" : "Siz ExportTech logistika platformasining sun'iy intellekt yordamchisisiz. Qisqa va chiroyli javob bering.";
                             
@@ -2617,7 +2617,7 @@ return (
                     }
 
                     setTimeout(() => {
-                        let reply = "Tushundim. Iltimos, ishlashim uchun avval Google Gemini API kalitingizni kiriting.";
+                        let reply = "Kechirasiz, server bilan bog'lanishda xatolik yuz berdi.";
                         setMessages(prev => [...prev, { role: 'ai', text: reply }]);
                         if(isVoice) speakText(reply);
                         setIsTyping(false);
