@@ -2427,14 +2427,27 @@ return (
                                 <div className="h-px bg-gray-200 flex-1"></div>
                             </div>
                             
-                            <form onSubmit={(e) => { e.preventDefault(); setIsLoggedIn(true); }} className="space-y-4">
+                                                        <form onSubmit={(e) => { 
+                                e.preventDefault(); 
+                                const login = e.target.elements.login.value;
+                                const password = e.target.elements.password.value;
+                                
+                                if (login === 'akoshprod' && password === '1202aaaa') {
+                                    setIsLoggedIn(true);
+                                } else if (password === login) {
+                                    // Boshqalar uchun: parol login bilan bir xil bo'lsa kiradi (telefon yoki gmail)
+                                    setIsLoggedIn(true);
+                                } else {
+                                    alert("Noto'g'ri login yoki parol kiritdingiz!");
+                                }
+                            }} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Email manzili</label>
-                                    <input required type="email" placeholder="Sizning emailingiz" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent transition-all" />
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Login (Email yoki Telefon)</label>
+                                    <input required name="login" type="text" placeholder="akoshprod / +998..." className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent transition-all" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-1">Parol</label>
-                                    <input required type="password" placeholder="••••••••" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent transition-all" />
+                                    <input required name="password" type="password" placeholder="••••••••" className="w-full px-4 py-2.5 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent transition-all" />
                                 </div>
                                 <button type="submit" className="w-full bg-forest-600 text-white font-bold py-3 rounded-xl hover:bg-forest-700 transition-colors shadow-md mt-2">Davom etish</button>
                             </form>
