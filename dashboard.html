@@ -89,6 +89,7 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=cf246830-4e44-486a-8b1e-d4cbf827be92&lang=ru_RU"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -959,6 +960,7 @@
 
         // 4. Logistika
         const LogistikaView = () => {
+            const mapRef = React.useRef(null);
             const [showOrderModal, setShowOrderModal] = useState(false);
             const [activeShipmentId, setActiveShipmentId] = useState('TRK-9823');
             const [calcOpen, setCalcOpen] = useState(false);
@@ -997,7 +999,9 @@
                         { date: 'Kutilmoqda', event: 'Bandar-Abbas porti (Eron)', completed: false },
                         { date: 'Kutilmoqda', event: 'Jebel Ali porti (Dubay)', completed: false }
                     ],
-                    coordinates: { x: '45%', y: '45%' }
+                    startCoord: [41.2995, 69.2401],
+                    currentCoord: [43.6028, 58.1818],
+                    endCoord: [55.7558, 37.6173]
                 },
                 {
                     id: 'TRK-9824',
@@ -1028,11 +1032,67 @@
                         { date: '05 Avgust', event: 'Yevropa Ittifoqi chegarasi', completed: true },
                         { date: '08 Avgust', event: 'Yetkazib berildi (Berlin)', completed: true }
                     ],
-                    coordinates: { x: '20%', y: '25%' }
+                    startCoord: [39.6542, 66.9597],
+                    currentCoord: [52.5200, 13.4050],
+                    endCoord: [52.5200, 13.4050]
                 }
             ];
 
             const activeShipment = shipments.find(s => s.id === activeShipmentId);
+
+            useEffect(() => {
+                if (!window.ymaps) return;
+                
+                let myMap;
+
+                window.ymaps.ready(() => {
+                    if (!mapRef.current) return;
+                    mapRef.current.innerHTML = ''; // Clear previous map instance
+
+                    myMap = new window.ymaps.Map(mapRef.current, {
+                        center: activeShipment.currentCoord,
+                        zoom: 5,
+                        controls: ['zoomControl']
+                    });
+
+                    // Add start marker
+                    myMap.geoObjects.add(new window.ymaps.Placemark(activeShipment.startCoord, {
+                        balloonContent: "Jo'nash nuqtasi",
+                        iconCaption: 'Yuklangan'
+                    }, { preset: 'islands#greenDotIcon' }));
+
+                    // Add end marker
+                    myMap.geoObjects.add(new window.ymaps.Placemark(activeShipment.endCoord, {
+                        balloonContent: 'Manzil: ' + activeShipment.destination,
+                        iconCaption: 'Manzil'
+                    }, { preset: 'islands#redDotIcon' }));
+
+                    // Add truck marker (current location)
+                    myMap.geoObjects.add(new window.ymaps.Placemark(activeShipment.currentCoord, {
+                        balloonContent: 'Hozirgi joy: ' + activeShipment.currentLocation,
+                        iconCaption: activeShipment.driver.name
+                    }, { preset: 'islands#blueAutoIcon' }));
+                    
+                    // Draw a simple polyline
+                    const polyline = new window.ymaps.Polyline([
+                        activeShipment.startCoord,
+                        activeShipment.currentCoord,
+                        activeShipment.endCoord
+                    ], {}, {
+                        strokeColor: "#3b82f6",
+                        strokeWidth: 4,
+                        strokeStyle: "shortdash"
+                    });
+                    myMap.geoObjects.add(polyline);
+                    
+                    myMap.setBounds(myMap.geoObjects.getBounds(), { checkZoomRange: true, zoomMargin: 40 });
+                });
+
+                return () => {
+                    if (myMap) myMap.destroy();
+                };
+            }, [activeShipmentId]);
+
 
             const CheckIcon = () => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
