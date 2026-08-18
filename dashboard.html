@@ -2482,6 +2482,7 @@ return (
 
             // Global modal states handled in App
         const App = () => {
+            const [isSidebarOpen, setSidebarOpen] = useState(false);
             const [activeTab, setActiveTab] = useState('asosiy');
             const [activeModal, setActiveModal] = useState(null);
             const [isLoggedIn, setIsLoggedIn] = useState(true);
