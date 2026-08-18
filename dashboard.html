@@ -78,7 +78,7 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://api-maps.yandex.ru/2.1/?lang=uz_UZ" type="text/javascript"></script></head>
+</head>
 <body>
     <div id="root"></div>
 
@@ -915,9 +915,6 @@
                 return () => clearInterval(interval);
             }, []);
 
-            const { useRef, useEffect: useReactEffect } = React;
-            const mapRef = useRef(null);
-            
             const shipments = [
                 {
                     id: 'TRK-9823',
@@ -934,9 +931,7 @@
                         { date: 'Kutilmoqda', event: 'Bandar-Abbas porti (Eron)', completed: false },
                         { date: 'Kutilmoqda', event: 'Jebel Ali porti (Dubay)', completed: false }
                     ],
-                    startCoord: [40.3833, 71.7833],
-                    currentCoord: [37.9601, 58.3261],
-                    endCoord: [25.2048, 55.2708]
+                    coordinates: { x: '45%', y: '45%' }
                 },
                 {
                     id: 'TRK-9824',
@@ -952,9 +947,7 @@
                         { date: 'Kutilmoqda', event: 'Tranzit (Qozog\'iston)', completed: false },
                         { date: 'Kutilmoqda', event: 'Moskva (Rossiya)', completed: false }
                     ],
-                    startCoord: [41.2995, 69.2401],
-                    currentCoord: [43.6028, 58.1818],
-                    endCoord: [55.7558, 37.6173]
+                    coordinates: { x: '55%', y: '30%' }
                 },
                 {
                     id: 'TRK-9825',
@@ -969,66 +962,11 @@
                         { date: '05 Avgust', event: 'Yevropa Ittifoqi chegarasi', completed: true },
                         { date: '08 Avgust', event: 'Yetkazib berildi (Berlin)', completed: true }
                     ],
-                    startCoord: [39.6542, 66.9597],
-                    currentCoord: [52.5200, 13.4050],
-                    endCoord: [52.5200, 13.4050]
+                    coordinates: { x: '20%', y: '25%' }
                 }
             ];
 
             const activeShipment = shipments.find(s => s.id === activeShipmentId);
-
-            useReactEffect(() => {
-                if (!window.ymaps) return;
-                
-                let myMap;
-
-                window.ymaps.ready(() => {
-                    if (!mapRef.current) return;
-                    mapRef.current.innerHTML = ''; // Clear previous map instance
-
-                    myMap = new window.ymaps.Map(mapRef.current, {
-                        center: activeShipment.currentCoord,
-                        zoom: 5,
-                        controls: ['zoomControl']
-                    });
-
-                    // Add start marker
-                    myMap.geoObjects.add(new window.ymaps.Placemark(activeShipment.startCoord, {
-                        balloonContent: 'Jo\'nash nuqtasi',
-                        iconCaption: 'Yuklangan'
-                    }, { preset: 'islands#greenDotIcon' }));
-
-                    // Add end marker
-                    myMap.geoObjects.add(new window.ymaps.Placemark(activeShipment.endCoord, {
-                        balloonContent: 'Manzil: ' + activeShipment.destination,
-                        iconCaption: 'Manzil'
-                    }, { preset: 'islands#redDotIcon' }));
-
-                    // Add truck marker (current location)
-                    myMap.geoObjects.add(new window.ymaps.Placemark(activeShipment.currentCoord, {
-                        balloonContent: 'Hozirgi joy: ' + activeShipment.currentLocation,
-                        iconCaption: activeShipment.driver.name
-                    }, { preset: 'islands#blueAutoIcon' }));
-                    
-                    // Draw a simple polyline
-                    const polyline = new window.ymaps.Polyline([
-                        activeShipment.startCoord,
-                        activeShipment.currentCoord,
-                        activeShipment.endCoord
-                    ], {}, {
-                        strokeColor: "#3b82f6",
-                        strokeWidth: 4,
-                        strokeStyle: "shortdash"
-                    });
-                    myMap.geoObjects.add(polyline);
-                    
-                    myMap.setBounds(myMap.geoObjects.getBounds(), { checkZoomRange: true, zoomMargin: 40 });
-                });
-
-                return () => {
-                    if (myMap) myMap.destroy();
-                };
-            }, [activeShipmentId]);
 
             const CheckIcon = () => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -1301,8 +1239,38 @@ return (
 
                         <div className="lg:col-span-2 space-y-6">
                             {/* Interactive Map Area */}
-                            <div className="bg-slate-900 rounded-3xl h-[400px] sm:h-[450px] border-4 border-slate-800 relative overflow-hidden shadow-2xl">
-                                <div ref={mapRef} className="absolute inset-0 w-full h-full" style={{ filter: 'invert(90%) hue-rotate(180deg) contrast(120%)' }}></div>
+                            <div className="bg-slate-900 rounded-3xl h-[400px] sm:h-[450px] border-4 border-slate-800 flex items-center justify-center relative overflow-hidden shadow-2xl">
+                                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+                                
+                                <svg className="absolute inset-0 w-full h-full" style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.4))' }}>
+                                    {/* Base route line */}
+                                    <path d={`M 75% 70% Q 50% 50% ${activeShipment.coordinates.x} ${activeShipment.coordinates.y}`} fill="none" stroke="#334155" strokeWidth="3" strokeDasharray="6 6" />
+                                    {/* Active route line */}
+                                    <path d={`M 75% 70% Q 50% 50% ${activeShipment.coordinates.x} ${activeShipment.coordinates.y}`} fill="none" stroke="#3b82f6" strokeWidth="4" 
+                                          style={{ strokeDasharray: 1000, strokeDashoffset: 1000 - (activeShipment.progress * 10), transition: 'all 1s ease-in-out' }} />
+                                </svg>
+
+                                <div className="absolute w-5 h-5 bg-green-500 rounded-full border-4 border-white shadow-[0_0_20px_#22c55e] z-10" style={{ left: '75%', top: '70%', transform: 'translate(-50%, -50%)' }}>
+                                    <div className="absolute top-6 left-1/2 -translate-x-1/2 text-[11px] font-bold text-white whitespace-nowrap bg-slate-800/90 px-2 py-1 rounded-md border border-slate-700">O'zbekiston</div>
+                                </div>
+
+                                <div className="absolute w-5 h-5 bg-red-500 rounded-full border-4 border-white shadow-[0_0_20px_#ef4444] z-10" style={{ left: activeShipment.status === 'Yakunlangan' ? activeShipment.coordinates.x : '20%', top: activeShipment.status === 'Yakunlangan' ? activeShipment.coordinates.y : '25%', transform: 'translate(-50%, -50%)' }}>
+                                     <div className="absolute top-6 left-1/2 -translate-x-1/2 text-[11px] font-bold text-white whitespace-nowrap bg-slate-800/90 px-2 py-1 rounded-md border border-slate-700">{activeShipment.destination.split(',')[0]}</div>
+                                </div>
+
+                                {activeShipment.status !== 'Yakunlangan' && (
+                                    <div className="absolute transition-all duration-1000 ease-in-out z-20" style={{ left: activeShipment.coordinates.x, top: activeShipment.coordinates.y, transform: 'translate(-50%, -50%)' }}>
+                                        <div className="relative group cursor-pointer">
+                                            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(59,130,246,0.8)] border-2 border-white animate-bounce-slow">
+                                                <Icons.Truck />
+                                            </div>
+                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow-xl whitespace-nowrap border border-gray-100">
+                                                {activeShipment.currentLocation}
+                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45 border-r border-b border-gray-100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Driver Info & IoT Stats */}
@@ -2347,11 +2315,6 @@ return (
     </script>
 </body>
 </html>
-
-
-
-
-
 
 
 
