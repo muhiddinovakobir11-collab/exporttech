@@ -2399,33 +2399,48 @@ return (
                     }
                     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                     if (!SpeechRecognition) {
-                        alert("Kechirasiz, brauzeringiz ovozli qidiruvni qo'llab-quvvatlamaydi.");
+                        alert("iPhone (Safari) brauzerida ovozli qidiruvni qo'llab-quvvatlamaydi. Iltimos Google Chrome brauzeridan foydalaning.");
                         return;
                     }
-                    const recognition = new SpeechRecognition();
-                    recognition.lang = 'uz-UZ';
-                    recognition.interimResults = false;
-                    
-                    recognition.onstart = () => setIsListening(true);
-                    
-                    recognition.onresult = (event) => {
-                        const transcript = event.results[0][0].transcript;
-                        setInputValue(prev => prev + " " + transcript);
+                    try {
+                        const recognition = new SpeechRecognition();
+                        recognition.lang = 'uz-UZ';
+                        recognition.interimResults = false;
+                        recognition.continuous = false;
+                        
+                        recognition.onstart = () => setIsListening(true);
+                        
+                        recognition.onresult = (event) => {
+                            const transcript = event.results[0][0].transcript;
+                            setInputValue(prev => prev + (prev ? " " : "") + transcript);
+                            setIsListening(false);
+                        };
+                        
+                        recognition.onerror = (event) => {
+                            console.error('Speech recognition error', event.error);
+                            if (event.error === 'not-allowed') {
+                                alert("Mikrofonga ruxsat berilmagan. Sozlamalardan ruxsat bering.");
+                            } else if (event.error === 'network') {
+                                alert("Internet aloqasi yo'q yoki Apple serverlari ishlamayapti.");
+                            }
+                            setIsListening(false);
+                        };
+                        
+                        recognition.onend = () => setIsListening(false);
+                        
+                        recognition.start();
+                    } catch (e) {
+                        alert("Mikrofonni yoqishda xatolik: " + e.message);
                         setIsListening(false);
-                    };
-                    
-                    recognition.onerror = (event) => {
-                        console.error('Speech recognition error', event.error);
-                        setIsListening(false);
-                    };
-                    
-                    recognition.onend = () => setIsListening(false);
-                    
-                    recognition.start();
+                    }
                 };
 
                 const handleSend = async () => {
                     if(!inputValue.trim()) return;
+                    
+                    if (window.speechSynthesis) {
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+                    }
                     
                     const userText = inputValue.trim();
                     const userMsg = { role: 'user', text: userText };
