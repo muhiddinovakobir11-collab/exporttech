@@ -2526,8 +2526,9 @@ return (
                         recognition.onresult = (event) => {
                             clearTimeout(timeout);
                             const transcript = event.results[0][0].transcript;
-                            setInputValue(prev => prev + (prev ? " " : "") + transcript);
+                            setInputValue('');
                             setIsListening(false);
+                            handleSend(transcript, true);
                         };
                         
                         recognition.onerror = (event) => {
@@ -2555,22 +2556,22 @@ return (
                     }
                 };
 
-                const handleSend = async () => {
-                    if(!inputValue.trim()) return;
+                const handleSend = async (overrideText = null, isVoice = false) => {
+                    const textToSend = (overrideText || inputValue).trim();
+                    if(!textToSend) return;
                     
                     if (window.speechSynthesis) {
-                        window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+                        try { window.speechSynthesis.speak(new SpeechSynthesisUtterance('')); } catch(e){}
                     }
                     
-                    const userText = inputValue.trim();
-                    const userMsg = { role: 'user', text: userText };
+                    const userMsg = { role: 'user', text: textToSend };
                     setMessages(prev => [...prev, userMsg]);
                     setInputValue('');
                     setIsTyping(true);
                     
                     setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
 
-                    const lowerInput = userText.toLowerCase();
+                    const lowerInput = textToSend.toLowerCase();
 
                     if (lowerInput.includes('rasm') || lowerInput.includes('chiz') || lowerInput.includes('yarat')) {
                         let prompt = lowerInput.replace('rasm', '').replace('chiz', '').replace('yarat', '').replace('menga', '').trim();
@@ -2583,7 +2584,7 @@ return (
                         
                         setTimeout(() => {
                             setMessages(prev => [...prev, { role: 'ai', text: reply }]);
-                            speakText("Siz uchun rasm yaratdim.");
+                            if(isVoice) speakText("Siz uchun rasm yaratdim.");
                             setIsTyping(false);
                         }, 1500);
                         return;
@@ -2591,21 +2592,24 @@ return (
 
                     if (apiKey && apiKey !== 'SIZNING_API_KALITINGIZ_SHU_YERDA') {
                         try {
+                            const systemInstruction = isVoice ? "Siz ExportTech platformasining AI yordamchisisiz. Foydalanuvchi OVOZ orqali gapiryapti. Iltimos, javobni QISQA, SODDA va silliq og'zaki dilda bering. Markdown, yulduzchalar (*), va murakkab belgilardan umuman foydalanmang!" : "Siz ExportTech logistika platformasining sun'iy intellekt yordamchisisiz. Qisqa va chiroyli javob bering.";
+                            
                             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
-                                    contents: [{ parts: [{ text: userText }] }]
+                                    contents: [{ role: "user", parts: [{ text: textToSend }] }],
+                                    systemInstruction: { role: "system", parts: [{ text: systemInstruction }] }
                                 })
                             });
                             if (!res.ok) throw new Error("API xatosi");
                             const data = await res.json();
                             const aiText = data.candidates[0].content.parts[0].text;
                             setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
-                            speakText(aiText);
+                            if(isVoice) speakText(aiText);
                         } catch (err) {
                             setMessages(prev => [...prev, { role: 'ai', text: 'Xatolik yuz berdi. API kalitingiz to\'g\'riligini tekshiring.' }]);
-                            speakText("Xatolik yuz berdi.");
+                            if(isVoice) speakText("Xatolik yuz berdi.");
                         }
                         setIsTyping(false);
                         setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
@@ -2613,21 +2617,9 @@ return (
                     }
 
                     setTimeout(() => {
-                        let reply = '';
-                        if (lowerInput.includes('salom')) {
-                            reply = "Assalomu alaykum! Men Gemini AI botiman. Bugun qanday yordam bera olaman?";
-                        } else if (lowerInput.includes('qandaysan') || lowerInput.includes('ahvol')) {
-                            reply = "Rahmat, men yaxshiman! Sizchi? Ishlaringiz yaxshimi? Nima savollaringiz bor?";
-                        } else if (lowerInput.includes('isming')) {
-                            reply = "Mening ismim Gemini AI. ExportTech jamoasi tomonidan sizga yordam berish uchun yaratilganman.";
-                        } else if (lowerInput.includes('bojxona') || lowerInput.includes('hujjat')) {
-                            reply = "Bojxona masalasida hujjatlarni to'g'ri rasmiylashtirish juda muhim. Asosan INVOICE, Fitosanitariya sertifikati va ST-1 kerak bo'ladi.";
-                        } else {
-                            reply = "Tushundim. Bu juda qiziq savol! Agar siz Google Gemini API kalitini kiritsangiz (yuqoridagi ⚙️ tugmasi orqali), men har qanday savolingizga to'liq, saviyali va cheklovsiz javob bera olaman!";
-                        }
-                        
+                        let reply = "Tushundim. Iltimos, ishlashim uchun avval Google Gemini API kalitingizni kiriting.";
                         setMessages(prev => [...prev, { role: 'ai', text: reply }]);
-                        speakText(reply);
+                        if(isVoice) speakText(reply);
                         setIsTyping(false);
                         setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
                     }, 1500);
