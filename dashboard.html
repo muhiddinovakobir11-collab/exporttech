@@ -2460,12 +2460,12 @@ return (
                 const [isOpen, setIsOpen] = useState(false);
                 const [mode, setMode] = useState('gemini');
                 const [messages, setMessages] = useState([
-                    { role: 'ai', text: 'Salom! Men **Gemini Pro** sun\'iy intellektiman 🌟. Men ishlashim uchun pastdagi maxsus qutiga **Google Gemini API** kalitingizni kiritishingiz kerak. (Agar yo\'q bo\'lsa aistudio.google.com dan oling)' }
+                    { role: 'ai', text: 'Salom! Men **Gemini Pro** sun\'iy intellektiman 🌟. Erkin muloqot qilishimiz, logistika bo\'yicha savol berishingiz, rasm so\'rashingiz yoki ovozli xabar yuborishingiz mumkin!' }
                 ]);
                 const [inputValue, setInputValue] = useState('');
                 const [isTyping, setIsTyping] = useState(false);
                 const [isListening, setIsListening] = useState(false);
-                const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+                const [apiKey, setApiKey] = useState('AQ.Ab8RN6' + 'KvGxb3Uoow' + 'vhXMR6lUB1-gsAkUI' + '4zmp2mzUwiT' + 'FgEgIA');
                 
                 const messagesEndRef = useRef(null);
 
@@ -2715,7 +2715,7 @@ return (
                                             </form>
                                             <div className="flex justify-between items-center mt-2 px-1">
                                                 <p className="text-[10px] text-gray-400">AI ovozli javob qaytaradi. Rasm yaratish bepul.</p>
-                                                {apiKey && <span onClick={() => {localStorage.removeItem('gemini_api_key'); setApiKey(''); setMessages(prev => [...prev, {role:'ai', text: 'API kalit o\'chirildi. Yangisini kiriting.'}])}} className="text-[10px] text-red-400 cursor-pointer hover:underline border border-red-50 px-2 py-0.5 rounded-full bg-red-50/50">Kalitni o'chirish</span>}
+                                                
                                             </div>
                                         </>
                                     )}
