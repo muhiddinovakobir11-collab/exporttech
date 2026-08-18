@@ -121,6 +121,12 @@
             Thermometer: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>,
             MessageCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>,
             Filter: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+            
+            Award: ({size=24, className=''}) => <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>,
+            Box: ({size=24, className=''}) => <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>,
+            Star: ({size=24, className=''}) => <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>,
+            LogOut: ({size=24, className=''}) => <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>,
+            Globe: ({size=24, className=''}) => <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>,
             ChevronRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         };
 
@@ -658,6 +664,7 @@
                             </div>
                         ))}
                     </div>
+                    {renderBadgeModal()}
                 </div>
             );
         };
@@ -702,7 +709,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-md w-full relative animate-scale-in shadow-2xl border border-gray-100">
-                            <button onClick={() => setDisputeModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setDisputeModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <h3 className="text-xl font-bold text-gray-900 mb-2">Nizo ochish (Shikoyat)</h3>
                             <p className="text-gray-500 text-sm mb-6">Ushbu shartnoma bo'yicha e'tirozingiz bo'lsa, sababni ko'rsating. Tasdiqlansa, muzlatilgan pulingiz (Escrow) qaytariladi.</p>
                             
@@ -750,7 +757,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-lg w-full relative animate-scale-in shadow-2xl border border-gray-100">
-                            <button onClick={() => setShowNewContract(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setShowNewContract(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <h3 className="text-2xl font-black text-gray-900 mb-6">Yangi Shartnoma Tuzish</h3>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div>
@@ -785,7 +792,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-lg w-full relative animate-scale-in shadow-2xl border border-gray-100">
-                            <button onClick={() => setViewContract(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setViewContract(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             
                             <div className="flex items-center justify-between mb-6 pr-6">
                                 <h3 className="text-2xl font-black text-gray-900">Shartnoma #{viewContract.id}</h3>
@@ -845,7 +852,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-md w-full relative animate-scale-in shadow-2xl border border-gray-100">
-                            <button onClick={() => setDocsModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setDocsModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             
                             <div className="w-16 h-16 bg-forest-50 text-forest-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-forest-100 shadow-sm">
                                 <Icons.FileText />
@@ -1130,7 +1137,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-lg w-full relative animate-scale-in shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto custom-scrollbar">
-                            <button onClick={() => { setShowOrderModal(false); setStep('form'); setBids([]); }} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/50 backdrop-blur rounded-full text-gray-700 hover:text-gray-900 hover:bg-white transition-colors z-10 shadow-sm"><Icons.X /></button>
+                            <button onClick={() => { setShowOrderModal(false); setStep('form'); setBids([]); }} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/50 backdrop-blur rounded-full text-gray-700 hover:text-gray-900 hover:bg-white transition-colors z-10 shadow-sm"><Icons.X size={24} /></button>
                             
                             {step === 'form' && (
                                 <>
@@ -1206,7 +1213,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-6 max-w-sm w-full relative animate-scale-in shadow-2xl border border-gray-100">
-                            <button onClick={() => setDocsOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-900"><Icons.X /></button>
+                            <button onClick={() => setDocsOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-900"><Icons.X size={24} /></button>
                             <h3 className="text-lg font-black text-gray-900 mb-1">Aqlli Hujjatlar</h3>
                             <p className="text-gray-500 text-xs mb-6">Ushbu yuk uchun avtomatik generatsiya qilingan hujjatlar</p>
                             
@@ -1246,7 +1253,7 @@
                                     <p className="text-[10px] text-green-500 font-bold flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span> Onlayn</p>
                                 </div>
                             </div>
-                            <button onClick={() => setChatOpen(false)} className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200"><Icons.X /></button>
+                            <button onClick={() => setChatOpen(false)} className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200"><Icons.X size={24} /></button>
                         </div>
                         
                         <div className="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-4">
@@ -1280,7 +1287,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in" onClick={() => setConsOpen(false)}>
                         <div className="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full relative animate-slide-up shadow-2xl border border-gray-100" onClick={e => e.stopPropagation()}>
-                            <button onClick={() => setConsOpen(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setConsOpen(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
                                     <Icons.Package size={24} />
@@ -1344,7 +1351,7 @@
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative animate-scale-in shadow-2xl border border-gray-100">
-                            <button onClick={() => { setCalcOpen(false); setResult(null); }} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => { setCalcOpen(false); setResult(null); }} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <h3 className="text-2xl font-black text-gray-900 mb-2">Kalkulyator</h3>
                             <p className="text-gray-500 text-sm mb-6">Taxminiy xarajat va vaqtni hisoblang</p>
                             
@@ -1599,7 +1606,7 @@ return (
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative animate-scale-in shadow-2xl border border-gray-100 text-center">
-                            <button onClick={() => setShowOtp(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setShowOtp(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
                             </div>
@@ -1632,7 +1639,7 @@ return (
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative animate-scale-in shadow-2xl border border-gray-100 text-center">
-                            <button onClick={() => setShowP2p(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setShowP2p(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <div className="w-16 h-16 bg-forest-50 text-forest-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-forest-100 shadow-sm">
                                 <Icons.Handshake />
                             </div>
@@ -1666,7 +1673,7 @@ return (
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative animate-scale-in shadow-2xl border border-gray-100 text-center">
-                            <button onClick={() => setShowCrypto(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setShowCrypto(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <div className="w-16 h-16 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-yellow-100 shadow-sm">
                                 <Icons.ShieldCheck />
                             </div>
@@ -1695,7 +1702,7 @@ return (
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative animate-scale-in shadow-2xl border border-gray-100 text-center">
-                            <button onClick={() => setShowSwift(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={() => setShowSwift(false)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <div className="w-16 h-16 bg-gray-50 text-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gray-200 shadow-sm">
                                 <Icons.FileText />
                             </div>
@@ -1723,7 +1730,7 @@ return (
                 return (
                     <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
                         <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative animate-scale-in shadow-2xl border border-gray-100">
-                            <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                            <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                             <div className="text-center mb-6 pt-2">
                                 <div className="w-16 h-16 bg-forest-50 text-forest-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-forest-100 shadow-sm">
                                     <Icons.FileText />
@@ -2467,7 +2474,7 @@ return (
             const PremiumModal = () => activeModal === 'premium' && (
                 <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
                     <div className="bg-gradient-to-br from-forest-800 to-forest-950 rounded-3xl p-8 max-w-md w-full relative shadow-2xl border border-forest-600">
-                        <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-colors"><Icons.X /></button>
+                        <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-colors"><Icons.X size={24} /></button>
                         <div className="w-16 h-16 bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 rounded-full flex items-center justify-center mb-6 shadow-inner border border-yellow-400/30"><Icons.Star size={32} className="text-yellow-400 fill-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]" /></div>
                         <h3 className="text-2xl font-black text-white mb-2">Premium Obuna</h3>
                         <p className="text-forest-100 mb-6 text-sm">Xalqaro bozorga tezroq chiqing. Nol komissiya, VIP logistika va 24/7 bojxona konsaltingi.</p>
@@ -2483,7 +2490,7 @@ return (
             const ConsultantModal = () => activeModal === 'consultant' && (
                 <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative shadow-2xl">
-                        <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X /></button>
+                        <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"><Icons.X size={24} /></button>
                         <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-6 mx-auto"><MessageSVG /></div>
                         <h3 className="text-xl font-extrabold text-gray-900 text-center mb-2">Bojxona Eksperti</h3>
                         <p className="text-gray-500 text-center text-sm mb-6 font-medium">Mutaxassislarimiz hujjatlarni rasmiylashtirishda yordam berishga tayyor.</p>
