@@ -2494,42 +2494,63 @@ return (
                 const toggleListen = () => {
                     if (isListening) {
                         setIsListening(false);
+                        if (window.activeRecognition) {
+                            try { window.activeRecognition.stop(); } catch(e){}
+                        }
                         return;
                     }
                     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                     if (!SpeechRecognition) {
-                        alert("iPhone (Safari) brauzerida ovozli qidiruvni qo'llab-quvvatlamaydi. Iltimos Google Chrome brauzeridan foydalaning.");
+                        alert("Telefoningiz ushbu brauzerda ovoz yozishni qo'llab-quvvatlamaydi. Iltimos, saytni to'g'ridan-to'g'ri Safari yoki Chrome brauzerida oching (Telegram ichidan emas).");
                         return;
                     }
                     try {
                         const recognition = new SpeechRecognition();
+                        window.activeRecognition = recognition;
                         recognition.lang = 'uz-UZ';
                         recognition.interimResults = false;
                         recognition.continuous = false;
                         
-                        recognition.onstart = () => setIsListening(true);
+                        const timeout = setTimeout(() => {
+                            if (!isListening) {
+                                alert("Mikrofon ishga tushmadi! IPhone Sozlamalariga kirib mikrofonga ruxsat bering yoki sahifani yangilang.");
+                                setIsListening(false);
+                            }
+                        }, 3000);
+                        
+                        recognition.onstart = () => {
+                            clearTimeout(timeout);
+                            setIsListening(true);
+                        };
                         
                         recognition.onresult = (event) => {
+                            clearTimeout(timeout);
                             const transcript = event.results[0][0].transcript;
                             setInputValue(prev => prev + (prev ? " " : "") + transcript);
                             setIsListening(false);
                         };
                         
                         recognition.onerror = (event) => {
+                            clearTimeout(timeout);
                             console.error('Speech recognition error', event.error);
                             if (event.error === 'not-allowed') {
-                                alert("Mikrofonga ruxsat berilmagan. Sozlamalardan ruxsat bering.");
+                                alert("Mikrofonga ruxsat berilmagan. IPhone Sozlamalaridan ruxsat bering.");
                             } else if (event.error === 'network') {
                                 alert("Internet aloqasi yo'q yoki Apple serverlari ishlamayapti.");
+                            } else if (event.error !== 'no-speech') {
+                                alert("Xatolik yuz berdi: " + event.error);
                             }
                             setIsListening(false);
                         };
                         
-                        recognition.onend = () => setIsListening(false);
+                        recognition.onend = () => {
+                            clearTimeout(timeout);
+                            setIsListening(false);
+                        };
                         
                         recognition.start();
                     } catch (e) {
-                        alert("Mikrofonni yoqishda xatolik: " + e.message);
+                        alert("Mikrofon xatosi: " + e.message + " - Iltimos Safari brauzeridan kiring!");
                         setIsListening(false);
                     }
                 };
