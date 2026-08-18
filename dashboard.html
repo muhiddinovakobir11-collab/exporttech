@@ -2484,14 +2484,23 @@ return (
 
                 const speakText = (text) => {
                     if (!window.speechSynthesis) return;
-                    // Matndagi html, markdown, va rasmlarni olib tashlash
                     const cleanText = text.replace(/<[^>]*>?/gm, '').replace(/\*\*/g, '').replace(/Mana siz so'ragan rasm:.*/g, 'Rasm yaratildi');
                     const utterance = new SpeechSynthesisUtterance(cleanText);
-                    utterance.lang = 'uz-UZ';
+                    
+                    const voices = window.speechSynthesis.getVoices();
+                    let selectedVoice = voices.find(v => v.lang.includes('uz')) || voices.find(v => v.lang.includes('tr')) || voices.find(v => v.lang.includes('ru'));
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                    } else {
+                        utterance.lang = 'uz-UZ';
+                    }
+                    
+                    window.speechSynthesis.cancel();
                     window.speechSynthesis.speak(utterance);
                 };
 
                 const toggleListen = () => {
+                    if (window.speechSynthesis) { window.speechSynthesis.speak(new SpeechSynthesisUtterance('')); }
                     if (isListening) {
                         setIsListening(false);
                         if (window.activeRecognition) {
