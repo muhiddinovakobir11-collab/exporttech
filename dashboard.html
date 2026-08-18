@@ -2330,129 +2330,160 @@ return (
         /*                                MAIN APP                                    */
         /* -------------------------------------------------------------------------- */
 
-                    const GlobalChatWidget = () => {
+                    
+            const GlobalChatWidget = () => {
                 const [isOpen, setIsOpen] = useState(false);
-                const [mode, setMode] = useState('tarjimon');
+                const [mode, setMode] = useState('gemini');
                 const [messages, setMessages] = useState([
-                    { role: 'ai', text: 'Salom! Men **Gemini Pro** sun\'iy intellektiman 🌟. Eksport, bojxona qoidalari, logistika marshrutlari yoki bozor tahlili bo\'yicha qanday yordam bera olaman?' }
+                    { role: 'ai', text: 'Salom! Men **Gemini Pro** sun\'iy intellektiman 🌟. Erkin muloqot qilishimiz, eksport boyicha savol berishingiz yoki rasm yaratishimni so\'rashingiz mumkin!' }
                 ]);
                 const [inputValue, setInputValue] = useState('');
                 const [isTyping, setIsTyping] = useState(false);
-                const messagesEndRef = React.useRef(null);
+                const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+                const [showSettings, setShowSettings] = useState(false);
+                const messagesEndRef = useRef(null);
 
                 const MessageSVG = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>;
                 
-                const handleSend = () => {
+                const saveKey = (key) => {
+                    localStorage.setItem('gemini_api_key', key);
+                    setApiKey(key);
+                    setShowSettings(false);
+                };
+
+                const parseText = (text) => {
+                    let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    return formatted;
+                };
+
+                const handleSend = async () => {
                     if(!inputValue.trim()) return;
                     
-                    if(mode === 'tarjimon') {
-                        setInputValue('');
-                        return;
-                    }
-
-                    const userMsg = { role: 'user', text: inputValue };
+                    const userText = inputValue;
+                    const userMsg = { role: 'user', text: userText };
                     setMessages(prev => [...prev, userMsg]);
                     setInputValue('');
                     setIsTyping(true);
                     
                     setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
 
+                    const lowerInput = userText.toLowerCase();
+
+                    // 1. Rasm yaratish (Image Generation via Pollinations)
+                    if (lowerInput.includes('rasm') || lowerInput.includes('chiz') || lowerInput.includes('yarat')) {
+                        let prompt = lowerInput.replace('rasm', '').replace('chiz', '').replace('yarat', '').replace('menga', '').trim();
+                        if (!prompt) prompt = "beautiful export logistics concept";
+                        
+                        const encodedPrompt = encodeURIComponent(prompt + " cinematic, detailed, realistic");
+                        const imgUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?nologo=true&width=512&height=512`;
+                        
+                        const reply = `Siz uchun rasm yaratdim 🎨:\n<img src="${imgUrl}" class="mt-2 rounded-xl w-full object-cover border border-slate-200" onload="this.scrollIntoView({behavior: 'smooth'})" />`;
+                        
+                        setTimeout(() => {
+                            setMessages(prev => [...prev, { role: 'ai', text: reply }]);
+                            setIsTyping(false);
+                        }, 1500);
+                        return;
+                    }
+
+                    // 2. Haqiqiy Gemini API orqali javob
+                    if (apiKey) {
+                        try {
+                            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    contents: [{ parts: [{ text: userText }] }]
+                                })
+                            });
+                            if (!res.ok) throw new Error("API xatosi");
+                            const data = await res.json();
+                            const aiText = data.candidates[0].content.parts[0].text;
+                            setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
+                        } catch (err) {
+                            setMessages(prev => [...prev, { role: 'ai', text: 'Xatolik yuz berdi. API kalitingiz to\'g\'riligini tekshiring.' }]);
+                        }
+                        setIsTyping(false);
+                        setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+                        return;
+                    }
+
+                    // 3. API kalitsiz Offline Mock javoblar (Erkin muloqotga taqlid)
                     setTimeout(() => {
                         let reply = '';
-                        const lowerInput = userMsg.text.toLowerCase();
-                        if(lowerInput.includes('bojxona') || lowerInput.includes('hujjat') || lowerInput.includes('qoida')) {
-                            reply = 'Qishloq xo\'jaligi mahsulotlarini eksport qilishda asosan quyidagi hujjatlar talab etiladi:\n\n**1. Fitosanitariya sertifikati**\n**2. ST-1 (kelib chiqish sertifikati)**\n**3. Eksport bojxona deklaratsiyasi (EBD)**\n**4. CMR (Xalqaro transport hujjati)**\n\nGemini maslahati: Bojxona rasmiylashtiruvini tezlashtirish uchun barcha hujjatlarni "Hujjatlar" bo\'limiga oldindan yuklab qo\'ying.';
-                        } else if(lowerInput.includes('narx') || lowerInput.includes('bozor') || lowerInput.includes('talab')) {
-                            reply = '📊 **Bozor Tahlili (Gemini Pro):**\n\nHozirgi kunda **Yevropa bozorida** O\'zbekiston gilosiga talab juda yuqori. O\'rtacha ulgurji narx 1 kg uchun $4.50-$6.20 atrofida shakllanmoqda.\n\n**Dubay (BAA)** bozorida esa qovun, uzum va quritilgan mevalar xaridorgir. U yerdagi xaridorlar "Premium" qadoqlashga alohida e\'tibor berishadi.';
-                        } else if(lowerInput.includes('salom')) {
-                            reply = 'Assalomu alaykum! Men ExportTech tizimiga integratsiya qilingan sun\'iy intellektman. Sizning eksport amaliyotlaringizni osonlashtirish uchun shu yerdaman!';
+                        if (lowerInput.includes('salom')) {
+                            reply = "Assalomu alaykum! Men Gemini AI botiman. Bugun qanday yordam bera olaman?";
+                        } else if (lowerInput.includes('qandaysan') || lowerInput.includes('ahvol')) {
+                            reply = "Rahmat, men yaxshiman! Sizchi? Ishlaringiz yaxshimi? Nima savollaringiz bor?";
+                        } else if (lowerInput.includes('isming')) {
+                            reply = "Mening ismim Gemini AI. ExportTech jamoasi tomonidan sizga yordam berish uchun yaratilganman.";
+                        } else if (lowerInput.includes('bojxona') || lowerInput.includes('hujjat')) {
+                            reply = "Bojxona masalasida hujjatlarni to'g'ri rasmiylashtirish juda muhim. Asosan INVOICE, Fitosanitariya sertifikati va ST-1 kerak bo'ladi.";
                         } else {
-                            reply = '💡 **Gemini Pro tahlili:**\n\nSizning so\'rovingiz bo\'yicha eng maqbul yechim — platformamizdagi **"Yuklarni Birlashtirish (Sborniy)"** funksiyasidan foydalanishdir. Bu orqali siz logistika xarajatlarini 40% gacha tejashingiz mumkin. Yana qanday qo\'shimcha ma\'lumot kerak?';
+                            reply = "Tushundim. Bu juda qiziq savol! Agar siz Google Gemini API kalitini kiritsangiz (yuqoridagi ⚙️ tugmasi orqali), men har qanday savolingizga to'liq, saviyali va cheklovsiz javob bera olaman!";
                         }
+                        
                         setMessages(prev => [...prev, { role: 'ai', text: reply }]);
                         setIsTyping(false);
                         setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
-                    }, 1800);
+                    }, 1500);
                 };
 
                 return (
                     <div className="fixed bottom-6 right-6 z-[200]">
                         {!isOpen ? (
-                            <button onClick={() => setIsOpen(true)} className="w-14 h-14 bg-gradient-to-br from-forest-500 to-forest-700 text-white rounded-full flex items-center justify-center shadow-[0_10px_25px_rgba(5,150,105,0.4)] hover:scale-110 transition-all duration-300 animate-bounce">
+                            <button onClick={() => setIsOpen(true)} className="w-14 h-14 bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-105 transition-all animate-bounce">
                                 <MessageSVG />
                             </button>
                         ) : (
-                            <div className="w-[350px] sm:w-[400px] bg-white rounded-[24px] shadow-2xl border border-gray-100 overflow-hidden flex flex-col h-[550px] animate-scale-in">
-                                <div className="bg-gradient-to-r from-forest-700 via-forest-800 to-slate-900 p-4 text-white flex justify-between items-center shadow-md z-10 relative">
+                            <div className="w-[360px] sm:w-[400px] bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col h-[550px] animate-fade-in">
+                                <div className="bg-gradient-to-r from-blue-700 to-purple-800 p-4 text-white flex justify-between items-center shadow-md z-10 relative">
                                     <div className="flex flex-col">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-black tracking-wide">ExportTech Aloqa</span>
-                                            {mode === 'gemini' && <span className="bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text font-black text-sm border border-purple-400/30 px-2 py-0.5 rounded-full bg-white/10">AI</span>}
+                                            <span className="font-bold text-lg">ExportTech AI</span>
+                                            <span className="bg-white/20 text-xs px-2 py-0.5 rounded-full backdrop-blur-sm">Gemini</span>
                                         </div>
-                                        <span className="text-xs text-forest-200 mt-0.5">{mode === 'tarjimon' ? 'Avtomat tarjimon yoqilgan' : 'Gemini Pro 1.5 modeli ulandi'}</span>
+                                        <span className="text-xs text-blue-100 mt-0.5">{apiKey ? 'Haqiqiy Gemini Ulandi 🟢' : 'API kalitsiz rejim 🟡'}</span>
                                     </div>
-                                    <button onClick={() => setIsOpen(false)} className="text-forest-100 hover:text-white p-1.5 hover:bg-white/10 rounded-full transition-colors"><Icons.X size={18} /></button>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => setShowSettings(!showSettings)} className="text-blue-100 hover:text-white p-1.5 bg-white/10 rounded-full transition-colors"><Icons.Settings size={18} /></button>
+                                        <button onClick={() => setIsOpen(false)} className="text-blue-100 hover:text-white p-1.5 bg-white/10 rounded-full transition-colors"><Icons.X size={18} /></button>
+                                    </div>
                                 </div>
-                                <div className="flex bg-slate-50 p-2 gap-2 border-b border-gray-100 shadow-sm z-10 relative">
-                                    <button onClick={() => setMode('tarjimon')} className={"flex-1 text-xs font-bold py-2 rounded-xl transition-all duration-300 " + (mode === 'tarjimon' ? 'bg-white text-forest-700 shadow-sm border border-gray-200 scale-100' : 'text-gray-500 hover:bg-gray-200 scale-95')}>Xaridor bilan 💬</button>
-                                    <button onClick={() => setMode('gemini')} className={"flex-1 text-xs font-bold py-2 rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 " + (mode === 'gemini' ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-purple-700 shadow-sm border border-purple-200 scale-100' : 'text-gray-500 hover:bg-gray-200 scale-95')}>
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={mode === 'gemini' ? 'text-purple-600' : ''}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                                        Gemini AI
-                                    </button>
-                                </div>
-                                <div className="flex-1 p-4 overflow-y-auto bg-[#f8fafc] space-y-4">
-                                    {mode === 'tarjimon' ? (
-                                        <>
-                                            <div className="flex gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-black text-blue-700 shrink-0">X</div>
-                                                <div className="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 max-w-[85%]">
-                                                    <p className="text-sm text-gray-800 font-medium">Здравствуйте, мне нужны 20 тонн помидоров.</p>
-                                                    <div className="mt-2 pt-2 border-t border-gray-100">
-                                                        <p className="text-[11px] text-forest-600 font-bold flex items-center gap-1">
-                                                            <Icons.Globe size={12} />
-                                                            Salom, menga 20 tonna pomidor kerak.
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                
+                                {showSettings && (
+                                    <div className="bg-slate-50 p-4 border-b border-slate-200">
+                                        <label className="text-xs font-bold text-slate-600 block mb-1">Google Gemini API Kaliti</label>
+                                        <div className="flex gap-2">
+                                            <input type="password" id="api_key_input" defaultValue={apiKey} placeholder="AIzaSy..." className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-purple-500" />
+                                            <button onClick={() => saveKey(document.getElementById('api_key_input').value)} className="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-purple-700">Saqlash</button>
+                                        </div>
+                                        <p className="text-[10px] text-slate-400 mt-2">Haqiqiy sun'iy intellekt (savol-javob) uchun Google AI Studio'dan kalit oling. Rasm chizish kalitsiz ham ishlaydi.</p>
+                                    </div>
+                                )}
+
+                                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 scroll-smooth">
+                                    {messages.map((msg, i) => (
+                                        <div key={i} className={"flex gap-3 " + (msg.role === 'user' ? 'flex-row-reverse' : '')}>
+                                            <div className={"w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 " + (msg.role === 'user' ? 'bg-purple-600 text-white' : 'bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-md')}>
+                                                {msg.role === 'user' ? 'Siz' : 'AI'}
                                             </div>
-                                            <div className="flex gap-3 flex-row-reverse">
-                                                <div className="w-8 h-8 rounded-full bg-forest-600 flex items-center justify-center text-xs font-black text-white shrink-0">Siz</div>
-                                                <div className="bg-forest-600 text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[85%]">
-                                                    <p className="text-sm font-medium">Assalomu alaykum, bor. Narxini kelishamiz.</p>
-                                                    <div className="mt-2 pt-2 border-t border-forest-500/50">
-                                                        <p className="text-[11px] text-forest-100 font-bold flex items-center gap-1">
-                                                            <Icons.Globe size={12} />
-                                                            Здравствуйте, есть. Договоримся о цене.
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                            <div className={"p-3.5 rounded-2xl shadow-sm max-w-[85%] text-sm " + (msg.role === 'user' ? 'bg-purple-600 text-white rounded-tr-none' : 'bg-white border border-purple-100/50 rounded-tl-none text-gray-800')}>
+                                                <div className="whitespace-pre-wrap leading-relaxed [&>img]:mt-2 [&>img]:rounded-xl [&>img]:w-full" dangerouslySetInnerHTML={{ __html: parseText(msg.text) }} />
                                             </div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            {messages.map((msg, i) => (
-                                                <div key={i} className={"flex gap-3 " + (msg.role === 'user' ? 'flex-row-reverse' : '')}>
-                                                    <div className={"w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 " + (msg.role === 'user' ? 'bg-forest-600 text-white' : 'bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-md')}>
-                                                        {msg.role === 'user' ? 'Siz' : 'AI'}
-                                                    </div>
-                                                    <div className={"p-3.5 rounded-2xl shadow-sm max-w-[85%] text-sm " + (msg.role === 'user' ? 'bg-forest-600 text-white rounded-tr-none' : 'bg-white border border-purple-100/50 rounded-tl-none text-gray-800')}>
-                                                        <div className="whitespace-pre-wrap leading-relaxed" dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            {isTyping && (
-                                                <div className="flex gap-3">
-                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-md shrink-0 animate-pulse">AI</div>
-                                                    <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-purple-100/50 flex gap-1.5 items-center">
-                                                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
-                                                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                                                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                            <div ref={messagesEndRef} />
-                                        </>
+                                        </div>
+                                    ))}
+                                    {isTyping && (
+                                        <div className="flex gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-md shrink-0 animate-pulse">AI</div>
+                                            <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-purple-100/50 flex gap-1.5 items-center">
+                                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
+                                            </div>
+                                        </div>
                                     )}
+                                    <div ref={messagesEndRef} />
                                 </div>
                                 <div className="p-3 bg-white border-t border-gray-100">
                                     <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
@@ -2460,19 +2491,17 @@ return (
                                             type="text" 
                                             value={inputValue}
                                             onChange={(e) => setInputValue(e.target.value)}
-                                            placeholder={mode === 'gemini' ? "Gemini AI ga savol bering..." : "Xabar yozish..."} 
-                                            className={"flex-1 bg-gray-50 border rounded-xl px-4 py-2.5 text-sm outline-none transition-all " + (mode === 'gemini' ? 'border-purple-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200' : 'border-gray-200 focus:border-forest-500 focus:ring-2 focus:ring-forest-200')} 
+                                            placeholder="Gemini AI ga savol bering yoki rasm so'rang..." 
+                                            className="flex-1 bg-gray-50 border border-purple-200 rounded-xl px-4 py-2.5 text-sm outline-none transition-all focus:border-purple-500 focus:ring-2 focus:ring-purple-200" 
                                         />
                                         <button 
                                             type="submit"
-                                            disabled={isTyping || (!inputValue.trim() && mode === 'gemini')}
-                                            className={"w-11 h-11 rounded-xl flex items-center justify-center transition-all shadow-sm " + (mode === 'gemini' ? 'bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50' : 'bg-forest-600 hover:bg-forest-700 text-white')}>
+                                            disabled={isTyping || !inputValue.trim()}
+                                            className="w-11 h-11 bg-purple-600 hover:bg-purple-700 text-white rounded-xl flex items-center justify-center transition-all shadow-sm disabled:opacity-50">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                                         </button>
                                     </form>
-                                    {mode === 'gemini' && (
-                                        <p className="text-center text-[10px] text-gray-400 mt-2">Gemini Pro 1.5 modeli asosida ishlaydi.</p>
-                                    )}
+                                    <p className="text-center text-[10px] text-gray-400 mt-2">Gemini Pro 1.5 modeli. Rasm yaratish bepul.</p>
                                 </div>
                             </div>
                         )}
