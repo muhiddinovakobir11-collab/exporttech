@@ -2535,16 +2535,7 @@ return (
                                     </div>
                                 </div>
                                 
-                                {showSettings && (
-                                    <div className="bg-slate-50 p-4 border-b border-slate-200">
-                                        <label className="text-xs font-bold text-slate-600 block mb-1">Google Gemini API Kaliti</label>
-                                        <div className="flex gap-2">
-                                            <input type="password" id="api_key_input" defaultValue={apiKey} placeholder="AIzaSy..." className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-purple-500" />
-                                            <button onClick={() => saveKey(document.getElementById('api_key_input').value)} className="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-purple-700">Saqlash</button>
-                                        </div>
-                                        <p className="text-[10px] text-slate-400 mt-2">Haqiqiy sun'iy intellekt (savol-javob) uchun Google AI Studio'dan kalit oling. Rasm chizish kalitsiz ham ishlaydi.</p>
-                                    </div>
-                                )}
+                                
 
                                 <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 scroll-smooth">
                                     {messages.map((msg, i) => (
