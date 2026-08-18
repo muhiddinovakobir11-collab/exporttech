@@ -967,7 +967,7 @@
 
         // 4. Logistika
         const LogistikaView = () => {
-            const mapRef = React.useRef(null);
+            const mapRef = useRef(null);
             const [showOrderModal, setShowOrderModal] = useState(false);
             const [activeShipmentId, setActiveShipmentId] = useState('TRK-9823');
             const [calcOpen, setCalcOpen] = useState(false);
