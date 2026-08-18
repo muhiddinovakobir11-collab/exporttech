@@ -2179,8 +2179,8 @@ return (
                                     <button onClick={() => setIsOpen(false)} className="text-forest-100 hover:text-white p-1 bg-white/10 rounded-full"><Icons.X size={18} /></button>
                                 </div>
                                 <div className="flex bg-slate-50 p-2 gap-2 border-b border-slate-100 shadow-sm z-10 relative">
-                                    <button onClick={() => setMode('tarjimon')} className={lex-1 text-xs font-bold py-1.5 rounded-lg transition-colors }>Xaridor bilan</button>
-                                    <button onClick={() => setMode('bojxona')} className={lex-1 text-xs font-bold py-1.5 rounded-lg transition-colors }>Bojxona Boti ??</button>
+                                    <button onClick={() => setMode('tarjimon')} className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-colors ${mode === 'tarjimon' ? 'bg-white text-forest-700 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-slate-200'}`}>Xaridor bilan</button>
+                                    <button onClick={() => setMode('bojxona')} className={`flex-1 text-xs font-bold py-1.5 rounded-lg transition-colors ${mode === 'bojxona' ? 'bg-white text-forest-700 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-slate-200'}`}>Bojxona Boti 🤖</button>
                                 </div>
                                 <div className="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4">
                                     {mode === 'tarjimon' ? (
