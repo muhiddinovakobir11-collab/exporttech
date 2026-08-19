@@ -497,8 +497,16 @@
                                     <div className="absolute top-2 right-2 bg-orange-500/90 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10 backdrop-blur-sm animate-pulse">
                                         NAMUNA 3D MODEL
                                     </div>
-                                    <model-viewer 
-                                        src="https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/tomato.glb" 
+                                    
+<model-viewer 
+    src={
+        activeBadge.name.toLowerCase().includes('pomidor') ? "https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/tomato.glb" :
+        activeBadge.name.toLowerCase().includes('olma') ? "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb" : // Hozircha olma uchun avokado (vaqtinchalik)
+        activeBadge.name.toLowerCase().includes('bodring') ? "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb" : // Hozircha bodring uchun avokado
+        activeBadge.name.toLowerCase().includes('gilos') ? "https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/tomato.glb" : // Hozircha gilos uchun pomidor
+        "https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/tomato.glb"
+    }
+ 
                                         alt="3D model" 
                                         auto-rotate="true" 
                                         camera-controls="true" 
