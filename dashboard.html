@@ -579,50 +579,36 @@
         const MahsulotlarimView = () => {
             
 
-            const renderBadgeModal = () => {
+                        const renderBadgeModal = () => {
                 if (!activeBadge || !activeBadge.type) return null;
-                const isTomato = activeBadge.name.toLowerCase().includes('pomidor');
-                const badgeTitle = activeBadge.type === '3d' && !isTomato ? "Mahsulot Galereyasi" : ((badgeDetails[activeBadge.type] && badgeDetails[activeBadge.type].title) || activeBadge.name);
-                const badgeDesc = activeBadge.type === '3d' && !isTomato ? "Bu mahsulotning yuqori sifatli (fotorealistik) ko'rinishi." : ((badgeDetails[activeBadge.type] && badgeDetails[activeBadge.type].desc) || '');
+                const badge = badgeDetails[activeBadge.type] || {title: activeBadge.name, desc: '', color: 'bg-gray-100'};
                 
-                const badge = { ...badgeDetails[activeBadge.type], title: badgeTitle, desc: badgeDesc };
-                if(!badge.color) badge.color = 'bg-gray-100';
-
                 return (
                     <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in" onClick={() => setActiveBadge(null)}>
                         <div className="bg-white rounded-2xl p-6 max-w-sm w-full relative shadow-2xl animate-slide-up" onClick={e => e.stopPropagation()}>
                             <button onClick={() => setActiveBadge(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 p-1.5 rounded-full transition-colors"><Icons.X size={16} /></button>
                             <div className={"w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto " + badge.color}>
-                                {activeBadge.type === '3d' && !isTomato ? <Icons.Image /> : <Icons.ShieldCheck />}
+                                <Icons.ShieldCheck />
                             </div>
                             <h3 className="text-xl font-bold text-center text-gray-900 mb-2">{badge.title}</h3>
                             
                             <p className="text-center text-gray-600 mb-6 text-sm">{badge.desc}</p>
                             {activeBadge.type === '3d' && (
                                 <div className="mt-4 mb-6 w-full h-64 bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden relative shadow-inner flex items-center justify-center">
-                                    {!isTomato && <div className="absolute top-2 right-2 bg-emerald-500/90 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10 backdrop-blur-sm shadow-sm">YUQORI SIFAT 🌟</div>}
-                                    {isTomato ? (
-                                        <>
-                                        <div className="absolute top-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10 backdrop-blur-sm flex items-center gap-1">Sichqoncha bilan aylantiring</div>
-                                        <div className="absolute top-2 right-2 bg-orange-500/90 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10 backdrop-blur-sm animate-pulse">NAMUNA 3D MODEL</div>
-                                        <model-viewer 
-                                            src="https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/tomato.glb"
-                                            alt="3D model" auto-rotate="true" camera-controls="true" className="w-full h-full"
-                                            style={{ width: '100%', height: '100%', display: 'block' }} shadow-intensity="1"
-                                            camera-orbit="45deg 55deg 2.5m" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto auto"
-                                        ></model-viewer>
-                                        </>
-                                    ) : (
-                                        <img 
-                                            src={
-                                                activeBadge.name.toLowerCase().includes('bodring') ? "img/cucumber.jpg" :
-                                                activeBadge.name.toLowerCase().includes('gilos') ? "img/cherry.jpg" :
-                                                "https://images.unsplash.com/photo-1560806887-1e4cd0b6fac6?auto=format&fit=crop&w=500&q=80"
-                                            }
-                                            alt="Mahsulot"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    )}
+                                    <div className="absolute top-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10 backdrop-blur-sm flex items-center gap-1">Sichqoncha bilan aylantiring</div>
+                                    <div className="absolute top-2 right-2 bg-orange-500/90 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10 backdrop-blur-sm animate-pulse">NAMUNA 3D MODEL</div>
+                                    <model-viewer 
+                                        src={
+                                            activeBadge.name.toLowerCase().includes('pomidor') ? "https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/tomato.glb" :
+                                            activeBadge.name.toLowerCase().includes('olma') ? "https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/apple.glb" :
+                                            activeBadge.name.toLowerCase().includes('bodring') ? "https://static.poly.pizza/ebe40b59-9e41-4362-a4a7-bfe562af08ca.glb" :
+                                            activeBadge.name.toLowerCase().includes('gilos') ? "https://static.poly.pizza/ab8df4c5-5bfb-4389-9de2-31cd9bab6ab2.glb" :
+                                            "https://raw.githubusercontent.com/faizan8684/PowerAppsMR/master/tomato.glb"
+                                        }
+                                        alt="3D model" auto-rotate="true" camera-controls="true" className="w-full h-full"
+                                        style={{ width: '100%', height: '100%', display: 'block' }} shadow-intensity="1"
+                                        camera-orbit="45deg 55deg 2.5m" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto auto"
+                                    ></model-viewer>
                                 </div>
                             )}
                             
