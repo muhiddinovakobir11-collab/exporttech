@@ -265,9 +265,20 @@
             );
 
             const SalesChart = () => {
-                const data = [40, 70, 45, 90, 65, 110, 85];
-                const max = 120;
-                const days = ['Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan', 'Yak'];
+                const { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } = window.Recharts || {};
+                
+                if (!window.Recharts) return <div className="h-64 flex items-center justify-center text-gray-500">Kutib turing, grafik yuklanmoqda...</div>;
+
+                const data = [
+                    { name: 'Dush', eksport: 40, import: 24 },
+                    { name: 'Sesh', eksport: 30, import: 13 },
+                    { name: 'Chor', eksport: 20, import: 58 },
+                    { name: 'Pay', eksport: 27, import: 39 },
+                    { name: 'Juma', eksport: 18, import: 48 },
+                    { name: 'Shan', eksport: 23, import: 38 },
+                    { name: 'Yak', eksport: 34, import: 43 },
+                ];
+
                 return (
                     <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] p-6 mb-6">
                         <div className="flex justify-between items-center mb-6">
@@ -281,19 +292,27 @@
                                 <button className="px-3 py-1 text-xs font-medium text-gray-500 hover:text-gray-900">Yil</button>
                             </div>
                         </div>
-                        <div className="h-48 flex items-end justify-between gap-2 sm:gap-4 mt-8 relative">
-                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                                {[0, 1, 2, 3].map(i => <div key={i} className="w-full border-t border-gray-100 border-dashed"></div>)}
-                            </div>
-                            {data.map((val, idx) => (
-                                <div key={idx} className="flex flex-col items-center flex-1 z-10 group cursor-pointer">
-                                    <div className="w-full relative rounded-t-md bg-forest-100 group-hover:bg-forest-200 transition-colors bar flex items-end justify-center" style={{ height: `${(val/max)*100}%`, animationDelay: `${idx * 0.1}s` }}>
-                                        <div className="w-full rounded-t-md bg-forest-500 group-hover:bg-forest-600 transition-colors" style={{ height: '100%', opacity: 0.8 }}></div>
-                                        <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs font-bold py-1 px-2 rounded whitespace-nowrap shadow-lg">${val}k</div>
-                                    </div>
-                                    <span className="text-xs text-gray-500 font-medium mt-3">{days[idx]}</span>
-                                </div>
-                            ))}
+                        <div className="h-64 mt-4 w-full" style={{ minWidth: "100%" }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorEksport" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#059669" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="#059669" stopOpacity={0}/>
+                                        </linearGradient>
+                                        <linearGradient id="colorImport" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                                        </linearGradient>
+                                    </defs>
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
+                                    <CartesianGrid vertical={false} stroke="#e2e8f0" strokeDasharray="3 3" />
+                                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }} />
+                                    <Area type="monotone" dataKey="eksport" stroke="#059669" fillOpacity={1} fill="url(#colorEksport)" strokeWidth={3} />
+                                    <Area type="monotone" dataKey="import" stroke="#3b82f6" fillOpacity={1} fill="url(#colorImport)" strokeWidth={3} />
+                                </AreaChart>
+                            </ResponsiveContainer>
                         </div>
                     </div>
                 );
