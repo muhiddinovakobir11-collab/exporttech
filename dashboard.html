@@ -2858,12 +2858,27 @@ const Chatbot = ({ onClose }) => {
         { sender: 'ai', text: "Salom! Men ExportTech sun'iy intellekt maslahatchisiman. Qanday yordam bera olaman?" }
     ]);
     const [input, setInput] = React.useState('');
+    const speak = (text) => {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'uz-UZ';
+        window.speechSynthesis.speak(utterance);
+    };
+
     const handleSend = () => {
         if(!input.trim()) return;
+        if (window.speechSynthesis) {
+            const silent = new SpeechSynthesisUtterance('');
+            silent.volume = 0;
+            window.speechSynthesis.speak(silent);
+        }
         setMessages([...messages, { sender: 'user', text: input }]);
         setInput('');
         setTimeout(() => {
-            setMessages(prev => [...prev, { sender: 'ai', text: "Ajoyib savol! BAA bojxona qonunchiligiga ko'ra, maxsus ruxsatnoma kerak." }]);
+            const aiText = "Ajoyib savol! BAA bojxona qonunchiligiga ko'ra, maxsus ruxsatnoma kerak.";
+            setMessages(prev => [...prev, { sender: 'ai', text: aiText }]);
+            speak(aiText);
         }, 1000);
     };
     return (
