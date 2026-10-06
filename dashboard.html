@@ -92,6 +92,7 @@
     <script src="https://api-maps.yandex.ru/2.1/?apikey=cf246830-4e44-486a-8b1e-d4cbf827be92&lang=ru_RU"></script>
     <script src="https://unpkg.com/globe.gl"></script>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -2851,9 +2852,51 @@ return (
             };
 
             // Global modal states handled in App
+        
+const Chatbot = ({ onClose }) => {
+    const [messages, setMessages] = React.useState([
+        { sender: 'ai', text: "Salom! Men ExportTech sun'iy intellekt maslahatchisiman. Qanday yordam bera olaman?" }
+    ]);
+    const [input, setInput] = React.useState('');
+    const handleSend = () => {
+        if(!input.trim()) return;
+        setMessages([...messages, { sender: 'user', text: input }]);
+        setInput('');
+        setTimeout(() => {
+            setMessages(prev => [...prev, { sender: 'ai', text: "Ajoyib savol! BAA bojxona qonunchiligiga ko'ra, maxsus ruxsatnoma kerak." }]);
+        }, 1000);
+    };
+    return (
+        <div className="fixed bottom-24 right-6 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden z-[9999] animate-slide-up">
+            <div className="bg-forest-600 p-4 flex justify-between items-center text-white">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><Icons.MessageCircle /></div>
+                    <div>
+                        <h4 className="font-bold text-sm">AI Eksport Maslahatchisi</h4>
+                        <p className="text-[10px] text-forest-100">Jonli rejim</p>
+                    </div>
+                </div>
+                <button onClick={onClose} className="hover:bg-white/20 p-1.5 rounded-full"><Icons.X size={16} /></button>
+            </div>
+            <div className="h-72 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3">
+                {messages.map((m, i) => (
+                    <div key={i} className={`max-w-[85%] p-3 rounded-2xl text-sm ${m.sender === 'ai' ? 'bg-white border border-gray-100 rounded-tl-sm shadow-sm' : 'bg-forest-600 text-white rounded-tr-sm self-end shadow-sm'}`}>
+                        {m.text}
+                    </div>
+                ))}
+            </div>
+            <div className="p-3 border-t border-gray-100 bg-white flex gap-2">
+                <input value={input} onChange={e => setInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSend()} placeholder="Savolingizni yozing..." className="flex-1 bg-gray-100 rounded-xl px-4 py-2 text-sm outline-none" />
+                <button onClick={handleSend} className="bg-forest-600 text-white p-2 rounded-xl hover:bg-forest-700 transition-colors"><Icons.CheckCircle size={20} /></button>
+            </div>
+        </div>
+    );
+};
+
         const App = () => {
             const [isSidebarOpen, setSidebarOpen] = useState(false);
             const [activeTab, setActiveTab] = useState('asosiy');
+            const [showChatbot, setShowChatbot] = useState(false);
             const [activeModal, setActiveModal] = useState(null);
             const [isLoggedIn, setIsLoggedIn] = useState(true);
             const [userProfile, setUserProfile] = useState({
